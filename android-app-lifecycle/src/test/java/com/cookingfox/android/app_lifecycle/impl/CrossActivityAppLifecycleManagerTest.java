@@ -5,7 +5,6 @@ import android.app.Activity;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.fixture.FirstActivity;
 import com.cookingfox.android.app_lifecycle.fixture.SecondActivity;
-import com.cookingfox.android.app_lifecycle.fixture.ThirdActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +58,12 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onCreate(null);
     }
 
+    @SuppressWarnings("unchecked")
+    @Test(expected = IllegalArgumentException.class)
+    public void onCreate_should_throw_if_origin_not_activity() throws Exception {
+        appLifecycleManager.onCreate((Class) IllegalArgumentException.class);
+    }
+
     @Test
     public void onCreate_should_call_listener_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
@@ -108,26 +113,54 @@ public class CrossActivityAppLifecycleManagerTest {
     }
 
     @Test
+    public void onStart_should_call_listeners_only_once() throws Exception {
+        final AtomicInteger counter = new AtomicInteger(0);
+        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
+            @Override
+            public void onAppStart(Class<?> origin) {
+                counter.incrementAndGet();
+            }
+        });
+
+        appLifecycleManager.onCreate(targetOrigin);
+        appLifecycleManager.onStart(targetOrigin);
+        appLifecycleManager.onStart(targetOrigin);
+
+        assertEquals(1, counter.get());
+    }
+
+    @Test
     public void onStart_should_not_set_origin_if_current_is_null() throws Exception {
         appLifecycleManager.onStart(FirstActivity.class);
 
         assertNull(appLifecycleManager.currentOrigin);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void onResume_should_throw_if_null() throws Exception {
+        appLifecycleManager.onResume(null);
+    }
+
     @Test
-    public void onStart_should_change_origin_if_different() throws Exception {
-        appLifecycleManager.onCreate(FirstActivity.class);
-        appLifecycleManager.onStart(FirstActivity.class);
+    public void onResume_should_call_listeners_only_once() throws Exception {
+        final AtomicInteger counter = new AtomicInteger(0);
+        final Class<? extends Activity> targetOrigin = FirstActivity.class;
 
-        assertEquals(FirstActivity.class, appLifecycleManager.currentOrigin);
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
+            @Override
+            public void onAppResume(Class<?> origin) {
+                counter.incrementAndGet();
+            }
+        });
 
-        appLifecycleManager.onStart(SecondActivity.class);
+        appLifecycleManager.onCreate(targetOrigin);
+        appLifecycleManager.onStart(targetOrigin);
+        appLifecycleManager.onResume(targetOrigin);
+        appLifecycleManager.onResume(targetOrigin);
 
-        assertEquals(SecondActivity.class, appLifecycleManager.currentOrigin);
-
-        appLifecycleManager.onStart(ThirdActivity.class);
-
-        assertEquals(ThirdActivity.class, appLifecycleManager.currentOrigin);
+        assertEquals(1, counter.get());
     }
 
     //----------------------------------------------------------------------------------------------
@@ -141,71 +174,71 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.addListener(new AppLifecycleListener() {
             @Override
             public void onAppCreate(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.CREATE));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.CREATE));
             }
 
             @Override
             public void onAppStart(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.START));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.START));
             }
 
             @Override
             public void onAppResume(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.RESUME));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.RESUME));
             }
 
             @Override
             public void onAppPause(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.PAUSE));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.PAUSE));
             }
 
             @Override
             public void onAppStop(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.STOP));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.STOP));
             }
 
             @Override
             public void onAppFinish(Class<?> origin) {
-                actualEvents.add(new OriginEvent(origin, Event.FINISH));
+                actualEvents.add(new OriginEvent(origin, AppLifecycleEvent.FINISH));
             }
         });
 
         // launch: start first activity
-        appLifecycleManager.onCreate(FirstActivity.class); // CHANGE: create
-        appLifecycleManager.onStart(FirstActivity.class); // CHANGE: start
-        appLifecycleManager.onResume(FirstActivity.class); // CHANGE: resume
+        appLifecycleManager.onCreate(FirstActivity.class); // NOTIFY: create
+        appLifecycleManager.onStart(FirstActivity.class); // NOTIFY: start
+        appLifecycleManager.onResume(FirstActivity.class); // NOTIFY: resume
 
         // start second activity
-        appLifecycleManager.onPause(FirstActivity.class); // CHANGE: pause
+        appLifecycleManager.onPause(FirstActivity.class); // NOTIFY: pause
         appLifecycleManager.onCreate(SecondActivity.class);
         appLifecycleManager.onStart(SecondActivity.class);
-        appLifecycleManager.onResume(SecondActivity.class); // CHANGE: resume
+        appLifecycleManager.onResume(SecondActivity.class); // NOTIFY: resume
         appLifecycleManager.onStop(FirstActivity.class);
 
         // go back to first activity
-        appLifecycleManager.onPause(SecondActivity.class); // CHANGE: pause
+        appLifecycleManager.onPause(SecondActivity.class); // NOTIFY: pause
         appLifecycleManager.onCreate(FirstActivity.class);
         appLifecycleManager.onStart(FirstActivity.class);
-        appLifecycleManager.onResume(FirstActivity.class); // CHANGE: resume
+        appLifecycleManager.onResume(FirstActivity.class); // NOTIFY: resume
         appLifecycleManager.onStop(SecondActivity.class);
         appLifecycleManager.onFinish(SecondActivity.class);
 
         // go back to home screen (exit)
-        appLifecycleManager.onPause(FirstActivity.class); // CHANGE: pause
-        appLifecycleManager.onStop(FirstActivity.class); // CHANGE: stop
-        appLifecycleManager.onFinish(FirstActivity.class); // CHANGE: finish
+        appLifecycleManager.onPause(FirstActivity.class); // NOTIFY: pause
+        appLifecycleManager.onStop(FirstActivity.class); // NOTIFY: stop
+        appLifecycleManager.onFinish(FirstActivity.class); // NOTIFY: finish
 
         final List<OriginEvent> expectedEvents = new LinkedList<>();
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.CREATE));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.START));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.RESUME));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.PAUSE));
-        expectedEvents.add(new OriginEvent(SecondActivity.class, Event.RESUME));
-        expectedEvents.add(new OriginEvent(SecondActivity.class, Event.PAUSE));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.RESUME));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.PAUSE));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.STOP));
-        expectedEvents.add(new OriginEvent(FirstActivity.class, Event.FINISH));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.CREATE));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.START));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.PAUSE));
+        expectedEvents.add(new OriginEvent(SecondActivity.class, AppLifecycleEvent.RESUME));
+        expectedEvents.add(new OriginEvent(SecondActivity.class, AppLifecycleEvent.PAUSE));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.PAUSE));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.STOP));
+        expectedEvents.add(new OriginEvent(FirstActivity.class, AppLifecycleEvent.FINISH));
 
         assertEquals(expectedEvents, actualEvents);
     }
@@ -214,20 +247,11 @@ public class CrossActivityAppLifecycleManagerTest {
     // HELPERS
     //----------------------------------------------------------------------------------------------
 
-    enum Event {
-        CREATE,
-        START,
-        RESUME,
-        PAUSE,
-        STOP,
-        FINISH,
-    }
-
     static final class OriginEvent {
         final Class<?> origin;
-        final Event event;
+        final AppLifecycleEvent event;
 
-        public OriginEvent(Class<?> origin, Event event) {
+        public OriginEvent(Class<?> origin, AppLifecycleEvent event) {
             this.origin = Objects.requireNonNull(origin);
             this.event = Objects.requireNonNull(event);
         }
