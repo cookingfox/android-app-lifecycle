@@ -5,8 +5,9 @@ import android.app.Activity;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleManager;
 
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by abeldebeer on 02/05/16.
@@ -14,7 +15,7 @@ import java.util.Objects;
 public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
     protected Class<? extends Activity> currentOrigin;
-    protected final LinkedList<AppLifecycleListener> listeners = new LinkedList<>();
+    protected final Set<AppLifecycleListener> listeners = new LinkedHashSet<>();
 
     @Override
     public void onCreate(Class<? extends Activity> origin) {
@@ -39,41 +40,69 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
                     listener.onAppStart(currentOrigin);
                 }
             });
+        } else if (currentOrigin != null) {
+            currentOrigin = origin;
+        } else {
+            // TODO: 03/05/16 Warning? Current origin should never be null at this stage
         }
-
-        currentOrigin = origin;
     }
 
     @Override
     public void onResume(Class<? extends Activity> origin) {
-
+        if (origin.equals(currentOrigin)) {
+            notifyListeners(new ListenerNotifier() {
+                @Override
+                public void apply(AppLifecycleListener listener) {
+                    listener.onAppResume(currentOrigin);
+                }
+            });
+        }
     }
 
     @Override
     public void onPause(Class<? extends Activity> origin) {
-
+        if (origin.equals(currentOrigin)) {
+            notifyListeners(new ListenerNotifier() {
+                @Override
+                public void apply(AppLifecycleListener listener) {
+                    listener.onAppPause(currentOrigin);
+                }
+            });
+        }
     }
 
     @Override
     public void onStop(Class<? extends Activity> origin) {
-
+        if (origin.equals(currentOrigin)) {
+            notifyListeners(new ListenerNotifier() {
+                @Override
+                public void apply(AppLifecycleListener listener) {
+                    listener.onAppStop(currentOrigin);
+                }
+            });
+        }
     }
 
     @Override
     public void onFinish(Class<? extends Activity> origin) {
-
+        if (origin.equals(currentOrigin)) {
+            notifyListeners(new ListenerNotifier() {
+                @Override
+                public void apply(AppLifecycleListener listener) {
+                    listener.onAppFinish(currentOrigin);
+                }
+            });
+        }
     }
 
     @Override
     public void addListener(AppLifecycleListener listener) {
-        Objects.requireNonNull(listener);
-
-        listeners.add(listener);
+        listeners.add(Objects.requireNonNull(listener));
     }
 
     @Override
     public void removeListener(AppLifecycleListener listener) {
-
+        listeners.remove(Objects.requireNonNull(listener));
     }
 
     private void notifyListeners(ListenerNotifier notifier) {
