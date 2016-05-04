@@ -33,15 +33,79 @@ dependencies {
 }
 ```
 
-## Usage
-
-TODO: explain application lifecycle events
-TODO: initialization from Application
-TODO: extending provided lifecycle activities
-TODO: custom components (e.g. controllers) should depend on `AppLifecycleListenable`
-TODO: separate event interfaces (e.g. OnAppCreated)
-TODO: persistent listener (for Application)
-
 ## Sample
 
-There's a sample application showing the usage of the library in the `/sample` directory.
+There's a sample application showing the basic usage of the library in the `/sample` directory.
+
+## Usage
+
+### Library initialization
+
+The recommended way to start using the library is to subclass the `android.app.Application` class
+and call the provider's initialize method in the `onCreate()` method:
+
+```java
+public class App extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        AppLifecycleProvider.initialize(this);
+    }
+}
+```
+
+Don't forget to add a reference to this class to your `AndroidManifest.xml`, for example:
+
+```xml
+<application
+    android:name=".App"
+    android:...>
+```
+
+### Activity integration
+
+The easiest way to integrate the library with your activities is by subclassing the provided
+`LifecycleActivity` classes. Here's an example for an `AppCompatActivity`:
+
+```java
+public class MainActivity extends LifecycleAppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // make sure you call super
+        super.onCreate(savedInstanceState);
+
+        ...
+    }
+}
+```
+
+As shown above, make sure you always call super when you override the `Activity` lifecycle methods.
+
+If you have a custom `Activity` implementation which cannot subclass the provided
+`LifecycleActivity` classes, then it is easy to integrate the library. Just call the corresponding
+methods on the app lifecycle manager. The only exception is the `onStop()` method, which must also
+contain the `onFinish()` call:
+
+```java
+@Override
+protected void onStop() {
+    super.onStop();
+
+    AppLifecycleProvider.getManager().onStop(this);
+
+    if (isFinishing()) {
+        AppLifecycleProvider.getManager().onFinish(this);
+    }
+}
+```
+
+### Listening for app lifecycle events
+
+TODO: custom components (e.g. controllers) should depend on `AppLifecycleListenable`
+TODO: persistent listener (for Application)
+
+### App lifecycle events
+
+TODO: explain application lifecycle events
+TODO: separate event interfaces (e.g. OnAppCreated)
