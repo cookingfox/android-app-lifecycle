@@ -2,8 +2,10 @@ package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleEventListener;
 import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
 import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppCreated;
 import com.cookingfox.android.app_lifecycle.fixture.FirstActivity;
 import com.cookingfox.android.app_lifecycle.fixture.SecondActivity;
 import com.cookingfox.android.app_lifecycle.impl.listener.DefaultAppLifecycleListener;
@@ -48,6 +50,14 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.addListener(null);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void addListener_should_throw_if_already_added() throws Exception {
+        final AppLifecycleListener listener = new DefaultAppLifecycleListener();
+
+        appLifecycleManager.addListener(listener);
+        appLifecycleManager.addListener(listener);
+    }
+
     @Test
     public void addListener_should_support_multiple_listeners() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
@@ -72,6 +82,35 @@ public class CrossActivityAppLifecycleManagerTest {
         AppLifecycleListenable listenable = appLifecycleManager.addListener(new DefaultAppLifecycleListener());
 
         assertSame(appLifecycleManager, listenable);
+    }
+
+    @Test
+    public void addListener_should_call_listeners_in_reverse_order() throws Exception {
+        final LinkedList<AppLifecycleEventListener> actualCalled = new LinkedList<>();
+
+        class TestListener implements OnAppCreated {
+            @Override
+            public void onAppCreated(Class<?> origin) {
+                actualCalled.add(this);
+            }
+        }
+
+        final TestListener first = new TestListener();
+        final TestListener second = new TestListener();
+        final TestListener third = new TestListener();
+
+        appLifecycleManager.addListener(first);
+        appLifecycleManager.addListener(second);
+        appLifecycleManager.addListener(third);
+
+        appLifecycleManager.onCreate(new FirstActivity());
+
+        final LinkedList<AppLifecycleEventListener> expectedCalled = new LinkedList<>();
+        expectedCalled.add(third);
+        expectedCalled.add(second);
+        expectedCalled.add(first);
+
+        assertEquals(expectedCalled, actualCalled);
     }
 
     //----------------------------------------------------------------------------------------------

@@ -2,9 +2,8 @@ package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
-import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
-import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleEventListener;
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppCreated;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppFinished;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppPaused;
@@ -12,11 +11,11 @@ import com.cookingfox.android.app_lifecycle.api.listener.OnAppResumed;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppStarted;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppStopped;
 import com.cookingfox.android.app_lifecycle.api.listener.PersistentAppLifecycleEventListener;
+import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * App lifecycle manager implementation that supports tracking the Android lifecycle across
@@ -37,11 +36,32 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     /**
      * A set of app lifecycle event listeners.
      */
-    protected final Set<AppLifecycleEventListener> listeners = new LinkedHashSet<>();
+    protected final LinkedList<AppLifecycleEventListener> listeners = new LinkedList<>();
 
     //----------------------------------------------------------------------------------------------
     // PUBLIC METHODS
     //----------------------------------------------------------------------------------------------
+
+    @Override
+    public AppLifecycleListenable addListener(AppLifecycleEventListener listener) {
+        if (listeners.contains(Objects.requireNonNull(listener))) {
+            throw new IllegalStateException("Listener was already added: " + listener);
+        }
+
+        listeners.addFirst(listener);
+
+        return this;
+    }
+
+    @Override
+    public AppLifecycleListenable removeListener(AppLifecycleEventListener listener) {
+        // do not remove persistent listeners
+        if (!(listener instanceof PersistentAppLifecycleEventListener)) {
+            listeners.remove(Objects.requireNonNull(listener));
+        }
+
+        return this;
+    }
 
     @Override
     public void onCreate(Activity origin) {
@@ -182,23 +202,6 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         for (AppLifecycleEventListener listener : listeners) {
             removeListener(listener);
         }
-    }
-
-    @Override
-    public AppLifecycleListenable addListener(AppLifecycleEventListener listener) {
-        listeners.add(Objects.requireNonNull(listener));
-
-        return this;
-    }
-
-    @Override
-    public AppLifecycleListenable removeListener(AppLifecycleEventListener listener) {
-        // do not remove persistent listeners
-        if (!(listener instanceof PersistentAppLifecycleEventListener)) {
-            listeners.remove(Objects.requireNonNull(listener));
-        }
-
-        return this;
     }
 
     //----------------------------------------------------------------------------------------------
