@@ -7,32 +7,32 @@ import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
  */
 public class DefaultAppLifecycleListener implements AppLifecycleListener {
     @Override
-    public void onAppCreate(Class<?> origin) {
+    public void onAppCreated(Class<?> origin) {
 
     }
 
     @Override
-    public void onAppStart(Class<?> origin) {
+    public void onAppStarted(Class<?> origin) {
 
     }
 
     @Override
-    public void onAppResume(Class<?> origin) {
+    public void onAppResumed(Class<?> origin) {
 
     }
 
     @Override
-    public void onAppPause(Class<?> origin) {
+    public void onAppPaused(Class<?> origin) {
 
     }
 
     @Override
-    public void onAppStop(Class<?> origin) {
+    public void onAppStopped(Class<?> origin) {
 
     }
 
     @Override
-    public void onAppFinish(Class<?> origin) {
+    public void onAppFinished(Class<?> origin) {
 
     }
 }

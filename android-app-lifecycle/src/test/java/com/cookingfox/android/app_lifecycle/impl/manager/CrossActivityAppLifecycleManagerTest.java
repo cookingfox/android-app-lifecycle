@@ -54,7 +54,7 @@ public class CrossActivityAppLifecycleManagerTest {
         for (int i = 0; i < numListeners; i++) {
             appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
                 @Override
-                public void onAppCreate(Class<?> origin) {
+                public void onAppCreated(Class<?> origin) {
                     counter.incrementAndGet();
                 }
             });
@@ -116,7 +116,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppCreate(Class<?> origin) {
+            public void onAppCreated(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -146,7 +146,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppStart(Class<?> origin) {
+            public void onAppStarted(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -169,7 +169,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppStart(Class<?> origin) {
+            public void onAppStarted(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -204,7 +204,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppResume(Class<?> origin) {
+            public void onAppResumed(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -233,7 +233,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppPause(Class<?> origin) {
+            public void onAppPaused(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -263,7 +263,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppStop(Class<?> origin) {
+            public void onAppStopped(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -294,7 +294,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
-            public void onAppFinish(Class<?> origin) {
+            public void onAppFinished(Class<?> origin) {
                 counter.incrementAndGet();
             }
         });
@@ -317,7 +317,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         final AppLifecycleListener listener = new DefaultAppLifecycleListener() {
             @Override
-            public void onAppFinish(Class<?> origin) {
+            public void onAppFinished(Class<?> origin) {
                 counter.incrementAndGet();
             }
         };
@@ -436,32 +436,32 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.addListener(new AppLifecycleListener() {
             @Override
-            public void onAppCreate(Class<?> origin) {
+            public void onAppCreated(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.CREATE));
             }
 
             @Override
-            public void onAppStart(Class<?> origin) {
+            public void onAppStarted(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.START));
             }
 
             @Override
-            public void onAppResume(Class<?> origin) {
+            public void onAppResumed(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.RESUME));
             }
 
             @Override
-            public void onAppPause(Class<?> origin) {
+            public void onAppPaused(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.PAUSE));
             }
 
             @Override
-            public void onAppStop(Class<?> origin) {
+            public void onAppStopped(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.STOP));
             }
 
             @Override
-            public void onAppFinish(Class<?> origin) {
+            public void onAppFinished(Class<?> origin) {
                 actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.FINISH));
             }
         });

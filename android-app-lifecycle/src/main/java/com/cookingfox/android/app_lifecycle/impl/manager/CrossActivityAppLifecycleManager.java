@@ -31,7 +31,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         notifyListeners(new ListenerNotifier() {
             @Override
             public void apply(AppLifecycleListener listener) {
-                listener.onAppCreate(currentOrigin);
+                listener.onAppCreated(currentOrigin);
             }
         });
 
@@ -50,7 +50,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
-                    listener.onAppStart(currentOrigin);
+                    listener.onAppStarted(currentOrigin);
                 }
             });
         } else if (currentOrigin != null) {
@@ -70,7 +70,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
-                    listener.onAppResume(currentOrigin);
+                    listener.onAppResumed(currentOrigin);
                 }
             });
 
@@ -88,7 +88,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
-                    listener.onAppPause(currentOrigin);
+                    listener.onAppPaused(currentOrigin);
                 }
             });
 
@@ -106,7 +106,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
-                    listener.onAppStop(currentOrigin);
+                    listener.onAppStopped(currentOrigin);
                 }
             });
 
@@ -127,7 +127,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         notifyListeners(new ListenerNotifier() {
             @Override
             public void apply(AppLifecycleListener listener) {
-                listener.onAppFinish(currentOrigin);
+                listener.onAppFinished(currentOrigin);
             }
         });
 

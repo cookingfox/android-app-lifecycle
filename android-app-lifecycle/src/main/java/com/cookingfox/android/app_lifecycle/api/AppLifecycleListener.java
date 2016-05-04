@@ -10,7 +10,7 @@ public interface AppLifecycleListener {
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppCreate(Class<?> origin);
+    void onAppCreated(Class<?> origin);
 
     /**
      * When the first activity is started, or when the current activity is brought back from
@@ -18,7 +18,7 @@ public interface AppLifecycleListener {
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppStart(Class<?> origin);
+    void onAppStarted(Class<?> origin);
 
     /**
      * When the current activity is resumed by bringing it back to foreground, or after starting a
@@ -26,7 +26,7 @@ public interface AppLifecycleListener {
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppResume(Class<?> origin);
+    void onAppResumed(Class<?> origin);
 
     /**
      * When the current activity is paused by bringing it to background, or by starting a new
@@ -34,20 +34,20 @@ public interface AppLifecycleListener {
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppPause(Class<?> origin);
+    void onAppPaused(Class<?> origin);
 
     /**
      * When the current activity is brought to background.
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppStop(Class<?> origin);
+    void onAppStopped(Class<?> origin);
 
     /**
      * When the last activity finished (exit).
      *
      * @param origin The activity that triggered this event.
      */
-    void onAppFinish(Class<?> origin);
+    void onAppFinished(Class<?> origin);
 
 }

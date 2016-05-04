@@ -21,33 +21,33 @@ public class App extends Application {
 
         AppLifecycleProvider.initialize(this).addListener(new PersistentAppLifecycleListener() {
             @Override
-            public void onAppCreate(Class<?> origin) {
-                Log.i(TAG, "onAppCreate | origin: " + origin.getSimpleName());
+            public void onAppCreated(Class<?> origin) {
+                Log.i(TAG, "onAppCreated | origin: " + origin.getSimpleName());
             }
 
             @Override
-            public void onAppStart(Class<?> origin) {
-                Log.i(TAG, "onAppStart | origin: " + origin.getSimpleName());
+            public void onAppStarted(Class<?> origin) {
+                Log.i(TAG, "onAppStarted | origin: " + origin.getSimpleName());
             }
 
             @Override
-            public void onAppResume(Class<?> origin) {
-                Log.i(TAG, "onAppResume | origin: " + origin.getSimpleName());
+            public void onAppResumed(Class<?> origin) {
+                Log.i(TAG, "onAppResumed | origin: " + origin.getSimpleName());
             }
 
             @Override
-            public void onAppPause(Class<?> origin) {
-                Log.i(TAG, "onAppPause | origin: " + origin.getSimpleName());
+            public void onAppPaused(Class<?> origin) {
+                Log.i(TAG, "onAppPaused | origin: " + origin.getSimpleName());
             }
 
             @Override
-            public void onAppStop(Class<?> origin) {
-                Log.i(TAG, "onAppStop | origin: " + origin.getSimpleName());
+            public void onAppStopped(Class<?> origin) {
+                Log.i(TAG, "onAppStopped | origin: " + origin.getSimpleName());
             }
 
             @Override
-            public void onAppFinish(Class<?> origin) {
-                Log.i(TAG, "onAppFinish | origin: " + origin.getSimpleName());
+            public void onAppFinished(Class<?> origin) {
+                Log.i(TAG, "onAppFinished | origin: " + origin.getSimpleName());
             }
         });
     }
