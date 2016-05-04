@@ -2,7 +2,7 @@ package com.cookingfox.android.app_lifecycle.impl;
 
 import android.app.Application;
 
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleManager;
+import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import com.cookingfox.android.app_lifecycle.impl.manager.CrossActivityAppLifecycleManager;
 
 import java.util.Objects;

@@ -1,6 +1,8 @@
-package com.cookingfox.android.app_lifecycle.api;
+package com.cookingfox.android.app_lifecycle.api.manager;
 
 import android.app.Activity;
+
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
 
 /**
  * Allows activities to trigger app lifecycle events and other components to listen to these events.

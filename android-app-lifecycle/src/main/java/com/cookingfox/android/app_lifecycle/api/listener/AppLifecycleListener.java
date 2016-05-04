@@ -1,4 +1,4 @@
-package com.cookingfox.android.app_lifecycle.api;
+package com.cookingfox.android.app_lifecycle.api.listener;
 
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppCreated;
 import com.cookingfox.android.app_lifecycle.api.listener.OnAppFinished;

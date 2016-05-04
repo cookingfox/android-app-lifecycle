@@ -1,6 +1,6 @@
 package com.cookingfox.android.app_lifecycle.impl;
 
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleManager;
+import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import com.cookingfox.android.app_lifecycle.fixture.FirstApp;
 
 import org.junit.Before;

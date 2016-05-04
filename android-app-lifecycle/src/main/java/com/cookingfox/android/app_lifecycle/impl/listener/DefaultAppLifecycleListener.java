@@ -1,6 +1,6 @@
 package com.cookingfox.android.app_lifecycle.impl.listener;
 
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListener;
 
 /**
  * No-operation implementation of app lifecycle listener.

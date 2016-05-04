@@ -2,8 +2,8 @@ package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleListenable;
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.fixture.FirstActivity;
 import com.cookingfox.android.app_lifecycle.fixture.SecondActivity;
 import com.cookingfox.android.app_lifecycle.impl.listener.DefaultAppLifecycleListener;
