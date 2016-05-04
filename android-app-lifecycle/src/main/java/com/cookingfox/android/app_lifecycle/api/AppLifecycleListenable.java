@@ -1,5 +1,7 @@
 package com.cookingfox.android.app_lifecycle.api;
 
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleEventListener;
+
 /**
  * Provides the ability to listen for app lifecycle events.
  */
@@ -10,13 +12,13 @@ public interface AppLifecycleListenable {
      *
      * @param listener The listener to add.
      */
-    void addListener(AppLifecycleListener listener);
+    AppLifecycleListenable addListener(AppLifecycleEventListener listener);
 
     /**
      * Removes a listener for lifecycle events.
      *
      * @param listener The listener to remove.
      */
-    void removeListener(AppLifecycleListener listener);
+    AppLifecycleListenable removeListener(AppLifecycleEventListener listener);
 
 }

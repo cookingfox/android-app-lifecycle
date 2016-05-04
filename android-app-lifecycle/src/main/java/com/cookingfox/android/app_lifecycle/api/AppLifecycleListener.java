@@ -1,53 +1,21 @@
 package com.cookingfox.android.app_lifecycle.api;
 
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppCreated;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppFinished;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppPaused;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppResumed;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppStarted;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppStopped;
+
 /**
- * Listener for app lifecycle events.
+ * Listener for all app lifecycle events.
  */
-public interface AppLifecycleListener {
-
-    /**
-     * When the first activity is created.
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppCreated(Class<?> origin);
-
-    /**
-     * When the first activity is started, or when the current activity is brought back from
-     * background to foreground.
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppStarted(Class<?> origin);
-
-    /**
-     * When the current activity is resumed by bringing it back to foreground, or after starting a
-     * new activity.
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppResumed(Class<?> origin);
-
-    /**
-     * When the current activity is paused by bringing it to background, or by starting a new
-     * activity.
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppPaused(Class<?> origin);
-
-    /**
-     * When the current activity is brought to background.
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppStopped(Class<?> origin);
-
-    /**
-     * When the last activity finished (exit).
-     *
-     * @param origin The activity that triggered this event.
-     */
-    void onAppFinished(Class<?> origin);
+public interface AppLifecycleListener extends
+        OnAppCreated,
+        OnAppStarted,
+        OnAppResumed,
+        OnAppPaused,
+        OnAppStopped,
+        OnAppFinished {
 
 }

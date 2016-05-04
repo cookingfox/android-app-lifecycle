@@ -2,9 +2,16 @@ package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
-import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.api.AppLifecycleListenable;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleManager;
-import com.cookingfox.android.app_lifecycle.impl.listener.PersistentAppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleEventListener;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppCreated;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppFinished;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppPaused;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppResumed;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppStarted;
+import com.cookingfox.android.app_lifecycle.api.listener.OnAppStopped;
+import com.cookingfox.android.app_lifecycle.api.listener.PersistentAppLifecycleEventListener;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -30,7 +37,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     /**
      * A set of app lifecycle event listeners.
      */
-    protected final Set<AppLifecycleListener> listeners = new LinkedHashSet<>();
+    protected final Set<AppLifecycleEventListener> listeners = new LinkedHashSet<>();
 
     //----------------------------------------------------------------------------------------------
     // PUBLIC METHODS
@@ -47,8 +54,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
         notifyListeners(new ListenerNotifier() {
             @Override
-            public void call(AppLifecycleListener listener) {
-                listener.onAppCreated(currentOrigin);
+            public void call(AppLifecycleEventListener listener) {
+                if (listener instanceof OnAppCreated) {
+                    ((OnAppCreated) listener).onAppCreated(currentOrigin);
+                }
             }
         });
 
@@ -68,8 +77,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             // after create or stop: notify listeners
             notifyListeners(new ListenerNotifier() {
                 @Override
-                public void call(AppLifecycleListener listener) {
-                    listener.onAppStarted(currentOrigin);
+                public void call(AppLifecycleEventListener listener) {
+                    if (listener instanceof OnAppStarted) {
+                        ((OnAppStarted) listener).onAppStarted(currentOrigin);
+                    }
                 }
             });
         } else if (currentOrigin != null) {
@@ -90,8 +101,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
-                public void call(AppLifecycleListener listener) {
-                    listener.onAppResumed(currentOrigin);
+                public void call(AppLifecycleEventListener listener) {
+                    if (listener instanceof OnAppResumed) {
+                        ((OnAppResumed) listener).onAppResumed(currentOrigin);
+                    }
                 }
             });
 
@@ -109,8 +122,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
-                public void call(AppLifecycleListener listener) {
-                    listener.onAppPaused(currentOrigin);
+                public void call(AppLifecycleEventListener listener) {
+                    if (listener instanceof OnAppPaused) {
+                        ((OnAppPaused) listener).onAppPaused(currentOrigin);
+                    }
                 }
             });
 
@@ -128,8 +143,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
-                public void call(AppLifecycleListener listener) {
-                    listener.onAppStopped(currentOrigin);
+                public void call(AppLifecycleEventListener listener) {
+                    if (listener instanceof OnAppStopped) {
+                        ((OnAppStopped) listener).onAppStopped(currentOrigin);
+                    }
                 }
             });
 
@@ -151,8 +168,10 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
         notifyListeners(new ListenerNotifier() {
             @Override
-            public void call(AppLifecycleListener listener) {
-                listener.onAppFinished(currentOrigin);
+            public void call(AppLifecycleEventListener listener) {
+                if (listener instanceof OnAppFinished) {
+                    ((OnAppFinished) listener).onAppFinished(currentOrigin);
+                }
             }
         });
 
@@ -160,40 +179,31 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         currentOrigin = null;
         lastEvent = null;
 
-        for (AppLifecycleListener listener : listeners) {
+        for (AppLifecycleEventListener listener : listeners) {
             removeListener(listener);
         }
     }
 
     @Override
-    public void addListener(AppLifecycleListener listener) {
+    public AppLifecycleListenable addListener(AppLifecycleEventListener listener) {
         listeners.add(Objects.requireNonNull(listener));
+
+        return this;
     }
 
     @Override
-    public void removeListener(AppLifecycleListener listener) {
+    public AppLifecycleListenable removeListener(AppLifecycleEventListener listener) {
         // do not remove persistent listeners
-        if (listener instanceof PersistentAppLifecycleListener) {
-            return;
+        if (!(listener instanceof PersistentAppLifecycleEventListener)) {
+            listeners.remove(Objects.requireNonNull(listener));
         }
 
-        listeners.remove(Objects.requireNonNull(listener));
+        return this;
     }
 
     //----------------------------------------------------------------------------------------------
     // PUBLIC METHODS
     //----------------------------------------------------------------------------------------------
-
-    /**
-     * Use the listener notifier to call a specific event method on all listeners.
-     *
-     * @param notifier Utility for calling the correct lifecycle event methods.
-     */
-    protected void notifyListeners(ListenerNotifier notifier) {
-        for (AppLifecycleListener listener : listeners) {
-            notifier.call(listener);
-        }
-    }
 
     /**
      * Validates the origin activity and allowed last events. For example, PAUSE can only be called
@@ -203,10 +213,21 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
      * @param allowedLastEvents The events after which this event is allowed to be triggered.
      * @return Whether this event is allowed to be triggered.
      */
-    private boolean isValid(Activity origin, AppLifecycleEvent... allowedLastEvents) {
+    protected boolean isValid(Activity origin, AppLifecycleEvent... allowedLastEvents) {
         Objects.requireNonNull(origin);
 
         return Arrays.asList(allowedLastEvents).contains(lastEvent);
+    }
+
+    /**
+     * Use the listener notifier to call a specific event method on all listeners.
+     *
+     * @param notifier Utility for calling the correct lifecycle event methods.
+     */
+    protected void notifyListeners(ListenerNotifier notifier) {
+        for (AppLifecycleEventListener listener : listeners) {
+            notifier.call(listener);
+        }
     }
 
     //----------------------------------------------------------------------------------------------
@@ -223,7 +244,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
          *
          * @param listener The listener instance.
          */
-        void call(AppLifecycleListener listener);
+        void call(AppLifecycleEventListener listener);
 
     }
 

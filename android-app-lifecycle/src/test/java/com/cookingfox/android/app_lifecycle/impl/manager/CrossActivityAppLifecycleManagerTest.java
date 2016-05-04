@@ -2,6 +2,7 @@ package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
+import com.cookingfox.android.app_lifecycle.api.AppLifecycleListenable;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.fixture.FirstActivity;
 import com.cookingfox.android.app_lifecycle.fixture.SecondActivity;
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -65,6 +67,13 @@ public class CrossActivityAppLifecycleManagerTest {
         assertEquals(numListeners, counter.get());
     }
 
+    @Test
+    public void addListener_should_return_manager() throws Exception {
+        AppLifecycleListenable listenable = appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+
+        assertSame(appLifecycleManager, listenable);
+    }
+
     //----------------------------------------------------------------------------------------------
     // TESTS: removeListener
     //----------------------------------------------------------------------------------------------
@@ -98,6 +107,13 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.removeListener(listener);
 
         assertTrue(appLifecycleManager.listeners.contains(listener));
+    }
+
+    @Test
+    public void removeListener_should_return_manager() throws Exception {
+        AppLifecycleListenable listenable = appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+
+        assertSame(appLifecycleManager, listenable);
     }
 
     //----------------------------------------------------------------------------------------------
