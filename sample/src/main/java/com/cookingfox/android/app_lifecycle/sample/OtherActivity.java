@@ -1,14 +1,18 @@
 package com.cookingfox.android.app_lifecycle.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.cookingfox.android.app_lifecycle.impl.activity.LifecycleAppCompatActivity;
 
 /**
  * Created by abeldebeer on 03/05/16.
  */
-public class OtherActivity extends AppCompatActivity {
+public class OtherActivity extends LifecycleAppCompatActivity {
 
     private static final String TAG = OtherActivity.class.getSimpleName();
 
@@ -42,13 +46,31 @@ public class OtherActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        super.onStop();
-
         Log.i(TAG, "onStop");
 
         if (isFinishing()) {
             Log.i(TAG, "isFinishing");
         }
+
+        super.onStop();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
