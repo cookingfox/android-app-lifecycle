@@ -15,6 +15,7 @@ import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,7 +37,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     /**
      * A set of app lifecycle event listeners.
      */
-    protected final LinkedList<AppLifecycleEventListener> listeners = new LinkedList<>();
+    protected final List<AppLifecycleEventListener> listeners = new LinkedList<>();
 
     //----------------------------------------------------------------------------------------------
     // PUBLIC METHODS
@@ -48,16 +49,20 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             throw new IllegalStateException("Listener was already added: " + listener);
         }
 
-        listeners.addFirst(listener);
+        listeners.add(listener);
 
         return this;
     }
 
     @Override
     public AppLifecycleListenable removeListener(AppLifecycleEventListener listener) {
+        if (!listeners.contains(Objects.requireNonNull(listener))) {
+            throw new IllegalStateException("Listener not found: " + listener);
+        }
+
         // do not remove persistent listeners
         if (!(listener instanceof PersistentAppLifecycleEventListener)) {
-            listeners.remove(Objects.requireNonNull(listener));
+            listeners.remove(listener);
         }
 
         return this;
@@ -228,8 +233,21 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
      * @param notifier Utility for calling the correct lifecycle event methods.
      */
     protected void notifyListeners(ListenerNotifier notifier) {
-        for (AppLifecycleEventListener listener : listeners) {
-            notifier.call(listener);
+        final List<AppLifecycleEventListener> calledListeners = new LinkedList<>();
+        final int numListeners = listeners.size();
+
+        /**
+         * Call listeners in reverse order (added first, called last). Calling listeners this way
+         * will prevent a concurrent modification exception, but requires keeping track of called
+         * listeners.
+         */
+        for (int i = numListeners - 1; i >= 0; i--) {
+            final AppLifecycleEventListener listener = listeners.get(i);
+
+            if (!calledListeners.contains(listener)) {
+                notifier.call(listener);
+                calledListeners.add(listener);
+            }
         }
     }
 

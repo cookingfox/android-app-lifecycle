@@ -85,7 +85,7 @@ public class CrossActivityAppLifecycleManagerTest {
     }
 
     @Test
-    public void addListener_should_call_listeners_in_reverse_order() throws Exception {
+    public void addListener_should_add_listeners_in_reverse_order() throws Exception {
         final LinkedList<AppLifecycleEventListener> actualCalled = new LinkedList<>();
 
         class TestListener implements OnAppCreated {
@@ -113,6 +113,21 @@ public class CrossActivityAppLifecycleManagerTest {
         assertEquals(expectedCalled, actualCalled);
     }
 
+    @Test
+    public void addListener_should_not_throw_concurrent_modification_exception() throws Exception {
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
+            @Override
+            public void onAppCreated(Class<?> origin) {
+                appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+                appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+            }
+        });
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+
+        appLifecycleManager.onCreate(new FirstActivity());
+    }
+
     //----------------------------------------------------------------------------------------------
     // TESTS: removeListener
     //----------------------------------------------------------------------------------------------
@@ -120,6 +135,11 @@ public class CrossActivityAppLifecycleManagerTest {
     @Test(expected = NullPointerException.class)
     public void removeListener_should_throw_if_null() throws Exception {
         appLifecycleManager.removeListener(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void removeListener_should_throw_if_not_added() throws Exception {
+        appLifecycleManager.removeListener(new DefaultAppLifecycleListener());
     }
 
     @Test
@@ -153,6 +173,24 @@ public class CrossActivityAppLifecycleManagerTest {
         AppLifecycleListenable listenable = appLifecycleManager.addListener(new DefaultAppLifecycleListener());
 
         assertSame(appLifecycleManager, listenable);
+    }
+
+    @Test
+    public void removeListener_should_not_throw_concurrent_modification_exception() throws Exception {
+        final DefaultAppLifecycleListener firstListener = new DefaultAppLifecycleListener();
+        final DefaultAppLifecycleListener lastListener = new DefaultAppLifecycleListener();
+
+        appLifecycleManager.addListener(firstListener);
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
+            @Override
+            public void onAppCreated(Class<?> origin) {
+                appLifecycleManager.removeListener(firstListener);
+                appLifecycleManager.removeListener(lastListener);
+            }
+        });
+        appLifecycleManager.addListener(lastListener);
+
+        appLifecycleManager.onCreate(new FirstActivity());
     }
 
     //----------------------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
--   TODO: 2016-05-04 Test listener concurrency support, e.g. remove listener from listener notify
 -   TODO: 2016-05-04 Write Robolectric tests
 -   TODO: 2016-05-04 Write instrumentation tests (espresso?)
 -   TODO: 2016-05-04 Write README
