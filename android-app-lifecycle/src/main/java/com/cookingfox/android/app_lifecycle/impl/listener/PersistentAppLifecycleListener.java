@@ -1,4 +1,4 @@
-package com.cookingfox.android.app_lifecycle.impl;
+package com.cookingfox.android.app_lifecycle.impl.listener;
 
 /**
  * Created by abeldebeer on 04/05/16.

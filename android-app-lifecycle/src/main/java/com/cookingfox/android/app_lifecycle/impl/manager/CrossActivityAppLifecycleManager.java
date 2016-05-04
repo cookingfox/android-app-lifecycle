@@ -1,9 +1,10 @@
-package com.cookingfox.android.app_lifecycle.impl;
+package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleManager;
+import com.cookingfox.android.app_lifecycle.impl.listener.PersistentAppLifecycleListener;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -39,17 +40,13 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
     @Override
     public void onStart(Activity origin) {
-        if (!isValid(origin, AppLifecycleEvent.CREATE, AppLifecycleEvent.PAUSE)) {
+        if (!isValid(origin, AppLifecycleEvent.CREATE, AppLifecycleEvent.PAUSE, AppLifecycleEvent.STOP)) {
             return;
         }
 
         final Class<? extends Activity> originClass = origin.getClass();
 
         if (originClass.equals(currentOrigin)) {
-            /**
-             * From CREATE to START: this only happens in the application's onStart phase, never
-             * again after.
-             */
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
@@ -57,11 +54,6 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
                 }
             });
         } else if (currentOrigin != null) {
-            /**
-             * From PAUSE to START: this happens when transitioning from one activity to the other.
-             * In this case we don't want to notify listeners of the START event, but instead only
-             * change the current origin.
-             */
             currentOrigin = originClass;
         }
 

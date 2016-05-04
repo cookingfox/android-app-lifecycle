@@ -1,10 +1,22 @@
 package com.cookingfox.android.app_lifecycle.api;
 
 /**
- * Created by abeldebeer on 02/05/16.
+ * Provides the ability to listen for app lifecycle events.
  */
 public interface AppLifecycleListenable {
+
+    /**
+     * Adds a listener for lifecycle events.
+     *
+     * @param listener The listener to add.
+     */
     void addListener(AppLifecycleListener listener);
 
+    /**
+     * Removes a listener for lifecycle events.
+     *
+     * @param listener The listener to remove.
+     */
     void removeListener(AppLifecycleListener listener);
+
 }

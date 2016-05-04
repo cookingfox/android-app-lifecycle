@@ -1,10 +1,12 @@
-package com.cookingfox.android.app_lifecycle.impl;
+package com.cookingfox.android.app_lifecycle.impl.manager;
 
 import android.app.Activity;
 
 import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
 import com.cookingfox.android.app_lifecycle.fixture.FirstActivity;
 import com.cookingfox.android.app_lifecycle.fixture.SecondActivity;
+import com.cookingfox.android.app_lifecycle.impl.listener.DefaultAppLifecycleListener;
+import com.cookingfox.android.app_lifecycle.impl.listener.PersistentAppLifecycleListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -340,40 +342,8 @@ public class CrossActivityAppLifecycleManagerTest {
     //----------------------------------------------------------------------------------------------
 
     @Test
-    public void functional_expected_flow() throws Exception {
-        final List<TestOriginEvent> actualEvents = new LinkedList<>();
-
-        appLifecycleManager.addListener(new AppLifecycleListener() {
-            @Override
-            public void onAppCreate(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.CREATE));
-            }
-
-            @Override
-            public void onAppStart(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.START));
-            }
-
-            @Override
-            public void onAppResume(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.RESUME));
-            }
-
-            @Override
-            public void onAppPause(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.PAUSE));
-            }
-
-            @Override
-            public void onAppStop(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.STOP));
-            }
-
-            @Override
-            public void onAppFinish(Class<?> origin) {
-                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.FINISH));
-            }
-        });
+    public void functional_navigating_between_activities() throws Exception {
+        final List<TestOriginEvent> actualEvents = createTestListener();
 
         final FirstActivity firstActivity = new FirstActivity();
         final SecondActivity secondActivity = new SecondActivity();
@@ -418,8 +388,89 @@ public class CrossActivityAppLifecycleManagerTest {
         assertEquals(expectedEvents, actualEvents);
     }
 
+    @Test
+    public void functional_bringing_app_to_background_and_foreground() throws Exception {
+        final List<TestOriginEvent> actualEvents = createTestListener();
+
+        final FirstActivity firstActivity = new FirstActivity();
+
+        // launch: start first activity
+        appLifecycleManager.onCreate(firstActivity);
+        appLifecycleManager.onStart(firstActivity);
+        appLifecycleManager.onResume(firstActivity);
+
+        // go back to home screen (to background)
+        appLifecycleManager.onPause(firstActivity);
+        appLifecycleManager.onStop(firstActivity);
+
+        // go back to app (to foreground)
+        appLifecycleManager.onStart(firstActivity);
+        appLifecycleManager.onResume(firstActivity);
+
+        // go back to home screen (exit)
+        appLifecycleManager.onPause(firstActivity);
+        appLifecycleManager.onStop(firstActivity);
+        appLifecycleManager.onFinish(firstActivity);
+
+        final List<TestOriginEvent> expectedEvents = new LinkedList<>();
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.CREATE));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.START));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.PAUSE));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.STOP));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.START));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.PAUSE));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.STOP));
+        expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.FINISH));
+
+        assertEquals(expectedEvents, actualEvents);
+    }
+
     //----------------------------------------------------------------------------------------------
-    // HELPERS
+    // HELPER METHODS
+    //----------------------------------------------------------------------------------------------
+
+    private List<TestOriginEvent> createTestListener() {
+        final List<TestOriginEvent> actualEvents = new LinkedList<>();
+
+        appLifecycleManager.addListener(new AppLifecycleListener() {
+            @Override
+            public void onAppCreate(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.CREATE));
+            }
+
+            @Override
+            public void onAppStart(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.START));
+            }
+
+            @Override
+            public void onAppResume(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.RESUME));
+            }
+
+            @Override
+            public void onAppPause(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.PAUSE));
+            }
+
+            @Override
+            public void onAppStop(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.STOP));
+            }
+
+            @Override
+            public void onAppFinish(Class<?> origin) {
+                actualEvents.add(new TestOriginEvent(origin, AppLifecycleEvent.FINISH));
+            }
+        });
+
+        return actualEvents;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // HELPER CLASS: TestOriginEvent
     //----------------------------------------------------------------------------------------------
 
     static final class TestOriginEvent {
