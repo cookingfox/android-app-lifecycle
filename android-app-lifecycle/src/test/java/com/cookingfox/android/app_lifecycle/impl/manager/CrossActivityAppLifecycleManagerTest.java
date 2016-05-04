@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abeldebeer on 02/05/16.
+ * Unit tests for {@link CrossActivityAppLifecycleManager}.
  */
 public class CrossActivityAppLifecycleManagerTest {
 

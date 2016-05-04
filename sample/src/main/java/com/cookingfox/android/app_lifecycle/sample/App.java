@@ -6,9 +6,6 @@ import android.util.Log;
 import com.cookingfox.android.app_lifecycle.impl.AppLifecycleProvider;
 import com.cookingfox.android.app_lifecycle.impl.listener.PersistentAppLifecycleListener;
 
-/**
- * Created by abeldebeer on 04/05/16.
- */
 public class App extends Application {
 
     private static final String TAG = App.class.getSimpleName();

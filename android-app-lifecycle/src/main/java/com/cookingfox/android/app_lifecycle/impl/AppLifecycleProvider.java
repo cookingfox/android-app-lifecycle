@@ -8,16 +8,29 @@ import com.cookingfox.android.app_lifecycle.impl.manager.CrossActivityAppLifecyc
 import java.util.Objects;
 
 /**
- * Created by abeldebeer on 02/05/16.
+ * Provides initialization of app lifecycle manager and static access to manager.
  */
 public final class AppLifecycleProvider {
 
+    /**
+     * Static instance of lifecycle manager.
+     */
     protected static AppLifecycleManager manager;
 
+    /**
+     * @return App lifecycle manager instance.
+     * @throws NullPointerException when not initialized.
+     */
     public static AppLifecycleManager getManager() {
         return Objects.requireNonNull(manager, "Not yet initialized");
     }
 
+    /**
+     * Initializes the app lifecycle manager.
+     *
+     * @param app An instance of the Android application, to ensure the correct starting point.
+     * @return App lifecycle manager instance.
+     */
     public static AppLifecycleManager initialize(Application app) {
         if (manager != null) {
             throw new IllegalStateException("Already initialized");

@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.cookingfox.android.app_lifecycle.impl.AppLifecycleProvider;
 
 /**
- * Created by abeldebeer on 04/05/16.
+ * App Compat Activity implementation with app lifecycle support.
  */
 public class LifecycleAppCompatActivity extends AppCompatActivity {
 

@@ -1,7 +1,7 @@
 package com.cookingfox.android.app_lifecycle.impl.manager;
 
 /**
- * Created by abeldebeer on 03/05/16.
+ * Internal lifecycle event enum to control and validate the order of events.
  */
 enum AppLifecycleEvent {
 

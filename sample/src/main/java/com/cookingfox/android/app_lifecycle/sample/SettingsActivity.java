@@ -7,9 +7,6 @@ import android.util.Log;
 
 import com.cookingfox.android.app_lifecycle.impl.activity.LifecyclePreferenceActivity;
 
-/**
- * Created by abeldebeer on 04/05/16.
- */
 public class SettingsActivity extends LifecyclePreferenceActivity {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();

@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by abeldebeer on 04/05/16.
+ * Unit tests for {@link AppLifecycleProvider}.
  */
 public class AppLifecycleProviderTest {
 

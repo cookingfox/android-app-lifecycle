@@ -9,9 +9,6 @@ import android.view.MenuItem;
 
 import com.cookingfox.android.app_lifecycle.impl.activity.LifecycleAppCompatActivity;
 
-/**
- * Created by abeldebeer on 03/05/16.
- */
 public class OtherActivity extends LifecycleAppCompatActivity {
 
     private static final String TAG = OtherActivity.class.getSimpleName();

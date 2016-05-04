@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.cookingfox.android.app_lifecycle.impl.AppLifecycleProvider;
 
 /**
- * Created by abeldebeer on 04/05/16.
+ * Basic Activity implementation with app lifecycle support.
  */
 public class LifecycleActivity extends Activity {
 

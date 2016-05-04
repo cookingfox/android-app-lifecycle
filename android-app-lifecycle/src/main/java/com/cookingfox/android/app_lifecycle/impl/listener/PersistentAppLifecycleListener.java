@@ -1,7 +1,12 @@
 package com.cookingfox.android.app_lifecycle.impl.listener;
 
+import com.cookingfox.android.app_lifecycle.api.AppLifecycleListener;
+
 /**
- * Created by abeldebeer on 04/05/16.
+ * No-operation implementation of app lifecycle listener that will not be removed on application
+ * finish.
+ *
+ * @see AppLifecycleListener#onAppFinished(Class)
  */
 public class PersistentAppLifecycleListener extends DefaultAppLifecycleListener {
 }
