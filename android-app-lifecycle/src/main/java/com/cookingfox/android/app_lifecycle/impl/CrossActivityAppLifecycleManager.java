@@ -128,15 +128,23 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
             return;
         }
 
-        if (origin.getClass().equals(currentOrigin)) {
-            notifyListeners(new ListenerNotifier() {
-                @Override
-                public void apply(AppLifecycleListener listener) {
-                    listener.onAppFinish(currentOrigin);
-                }
-            });
+        if (!origin.getClass().equals(currentOrigin)) {
+            return;
+        }
 
-            lastEvent = AppLifecycleEvent.FINISH;
+        notifyListeners(new ListenerNotifier() {
+            @Override
+            public void apply(AppLifecycleListener listener) {
+                listener.onAppFinish(currentOrigin);
+            }
+        });
+
+        // reset state
+        currentOrigin = null;
+        lastEvent = null;
+
+        for (AppLifecycleListener listener : listeners) {
+            removeListener(listener);
         }
     }
 
@@ -147,6 +155,11 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
     @Override
     public void removeListener(AppLifecycleListener listener) {
+        // do not remove persistent listeners
+        if (listener instanceof PersistentAppLifecycleListener) {
+            return;
+        }
+
         listeners.remove(Objects.requireNonNull(listener));
     }
 

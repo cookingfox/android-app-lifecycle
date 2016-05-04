@@ -15,7 +15,9 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by abeldebeer on 02/05/16.
@@ -59,6 +61,41 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onCreate(new FirstActivity());
 
         assertEquals(numListeners, counter.get());
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // TESTS: removeListener
+    //----------------------------------------------------------------------------------------------
+
+    @Test(expected = NullPointerException.class)
+    public void removeListener_should_throw_if_null() throws Exception {
+        appLifecycleManager.removeListener(null);
+    }
+
+    @Test
+    public void removeListener_should_remove_listener() throws Exception {
+        final DefaultAppLifecycleListener listener = new DefaultAppLifecycleListener();
+
+        appLifecycleManager.addListener(listener);
+
+        assertTrue(appLifecycleManager.listeners.contains(listener));
+
+        appLifecycleManager.removeListener(listener);
+
+        assertFalse(appLifecycleManager.listeners.contains(listener));
+    }
+
+    @Test
+    public void removeListener_should_not_remove_persistent_listener() throws Exception {
+        final PersistentAppLifecycleListener listener = new PersistentAppLifecycleListener();
+
+        appLifecycleManager.addListener(listener);
+
+        assertTrue(appLifecycleManager.listeners.contains(listener));
+
+        appLifecycleManager.removeListener(listener);
+
+        assertTrue(appLifecycleManager.listeners.contains(listener));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -269,6 +306,33 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onFinish(targetOrigin);
 
         assertEquals(1, counter.get());
+    }
+
+    @Test
+    public void onFinish_should_reset_state() throws Exception {
+        final AtomicInteger counter = new AtomicInteger(0);
+        final Activity targetOrigin = new FirstActivity();
+
+        final AppLifecycleListener listener = new DefaultAppLifecycleListener() {
+            @Override
+            public void onAppFinish(Class<?> origin) {
+                counter.incrementAndGet();
+            }
+        };
+
+        appLifecycleManager.addListener(listener);
+
+        appLifecycleManager.onCreate(targetOrigin);
+        appLifecycleManager.onStart(targetOrigin);
+        appLifecycleManager.onResume(targetOrigin);
+        appLifecycleManager.onPause(targetOrigin);
+        appLifecycleManager.onStop(targetOrigin);
+        appLifecycleManager.onFinish(targetOrigin);
+        appLifecycleManager.onFinish(targetOrigin);
+
+        assertFalse(appLifecycleManager.listeners.contains(listener));
+        assertNull(appLifecycleManager.currentOrigin);
+        assertNull(appLifecycleManager.lastEvent);
     }
 
     //----------------------------------------------------------------------------------------------
