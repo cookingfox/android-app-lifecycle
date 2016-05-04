@@ -20,12 +20,12 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     protected final Set<AppLifecycleListener> listeners = new LinkedHashSet<>();
 
     @Override
-    public void onCreate(Class<? extends Activity> origin) {
+    public void onCreate(Activity origin) {
         if (!isValid(origin, new AppLifecycleEvent[]{null})) {
             return;
         }
 
-        currentOrigin = origin;
+        currentOrigin = origin.getClass();
 
         notifyListeners(new ListenerNotifier() {
             @Override
@@ -38,12 +38,14 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     }
 
     @Override
-    public void onStart(Class<? extends Activity> origin) {
+    public void onStart(Activity origin) {
         if (!isValid(origin, AppLifecycleEvent.CREATE, AppLifecycleEvent.PAUSE)) {
             return;
         }
 
-        if (origin.equals(currentOrigin)) {
+        final Class<? extends Activity> originClass = origin.getClass();
+
+        if (originClass.equals(currentOrigin)) {
             /**
              * From CREATE to START: this only happens in the application's onStart phase, never
              * again after.
@@ -60,19 +62,19 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
              * In this case we don't want to notify listeners of the START event, but instead only
              * change the current origin.
              */
-            currentOrigin = origin;
+            currentOrigin = originClass;
         }
 
         lastEvent = AppLifecycleEvent.START;
     }
 
     @Override
-    public void onResume(Class<? extends Activity> origin) {
+    public void onResume(Activity origin) {
         if (!isValid(origin, AppLifecycleEvent.START, AppLifecycleEvent.PAUSE)) {
             return;
         }
 
-        if (origin.equals(currentOrigin)) {
+        if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
@@ -85,12 +87,12 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     }
 
     @Override
-    public void onPause(Class<? extends Activity> origin) {
+    public void onPause(Activity origin) {
         if (!isValid(origin, AppLifecycleEvent.RESUME)) {
             return;
         }
 
-        if (origin.equals(currentOrigin)) {
+        if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
@@ -103,12 +105,12 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     }
 
     @Override
-    public void onStop(Class<? extends Activity> origin) {
+    public void onStop(Activity origin) {
         if (!isValid(origin, AppLifecycleEvent.PAUSE)) {
             return;
         }
 
-        if (origin.equals(currentOrigin)) {
+        if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
@@ -121,12 +123,12 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     }
 
     @Override
-    public void onFinish(Class<? extends Activity> origin) {
+    public void onFinish(Activity origin) {
         if (!isValid(origin, AppLifecycleEvent.STOP)) {
             return;
         }
 
-        if (origin.equals(currentOrigin)) {
+        if (origin.getClass().equals(currentOrigin)) {
             notifyListeners(new ListenerNotifier() {
                 @Override
                 public void apply(AppLifecycleListener listener) {
@@ -154,10 +156,8 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
         }
     }
 
-    private boolean isValid(Class<? extends Activity> origin, AppLifecycleEvent... allowedLastEvents) {
-        if (!Activity.class.isAssignableFrom(origin)) {
-            throw new IllegalArgumentException("Lifecycle event methods can only be called from an activity");
-        }
+    private boolean isValid(Activity origin, AppLifecycleEvent... allowedLastEvents) {
+        Objects.requireNonNull(origin);
 
         return Arrays.asList(allowedLastEvents).contains(lastEvent);
     }

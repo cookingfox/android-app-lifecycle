@@ -6,15 +6,15 @@ import android.app.Activity;
  * Created by abeldebeer on 02/05/16.
  */
 public interface AppLifecycleManager extends AppLifecycleListenable {
-    void onCreate(Class<? extends Activity> origin);
+    void onCreate(Activity origin);
 
-    void onStart(Class<? extends Activity> origin);
+    void onStart(Activity origin);
 
-    void onResume(Class<? extends Activity> origin);
+    void onResume(Activity origin);
 
-    void onPause(Class<? extends Activity> origin);
+    void onPause(Activity origin);
 
-    void onStop(Class<? extends Activity> origin);
+    void onStop(Activity origin);
 
-    void onFinish(Class<? extends Activity> origin);
+    void onFinish(Activity origin);
 }

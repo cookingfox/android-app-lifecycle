@@ -56,7 +56,7 @@ public class CrossActivityAppLifecycleManagerTest {
             });
         }
 
-        appLifecycleManager.onCreate(FirstActivity.class);
+        appLifecycleManager.onCreate(new FirstActivity());
 
         assertEquals(numListeners, counter.get());
     }
@@ -70,16 +70,10 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onCreate(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onCreate_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onCreate((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onCreate_should_call_listener_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -89,11 +83,11 @@ public class CrossActivityAppLifecycleManagerTest {
         });
 
         appLifecycleManager.onCreate(targetOrigin);
-        appLifecycleManager.onCreate(SecondActivity.class);
-        appLifecycleManager.onCreate(FirstActivity.class);
+        appLifecycleManager.onCreate(new SecondActivity());
+        appLifecycleManager.onCreate(new FirstActivity());
 
         assertEquals(1, counter.get());
-        assertEquals(targetOrigin, appLifecycleManager.currentOrigin);
+        assertEquals(targetOrigin.getClass(), appLifecycleManager.currentOrigin);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -105,16 +99,11 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onStart(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onStart_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onStart((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onStart_should_only_call_listeners_if_same_origin() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
+        final Activity secondOrigin = new SecondActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -124,12 +113,12 @@ public class CrossActivityAppLifecycleManagerTest {
         });
 
         // these should not be called
-        appLifecycleManager.onStart(SecondActivity.class);
-        appLifecycleManager.onStart(SecondActivity.class);
+        appLifecycleManager.onStart(secondOrigin);
+        appLifecycleManager.onStart(secondOrigin);
 
         appLifecycleManager.onCreate(targetOrigin);
         appLifecycleManager.onStart(targetOrigin);
-        appLifecycleManager.onStart(SecondActivity.class);
+        appLifecycleManager.onStart(secondOrigin);
 
         assertEquals(1, counter.get());
     }
@@ -137,7 +126,7 @@ public class CrossActivityAppLifecycleManagerTest {
     @Test
     public void onStart_should_call_listeners_only_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -155,7 +144,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
     @Test
     public void onStart_should_not_set_origin_if_current_is_null() throws Exception {
-        appLifecycleManager.onStart(FirstActivity.class);
+        appLifecycleManager.onStart(new FirstActivity());
 
         assertNull(appLifecycleManager.currentOrigin);
     }
@@ -169,16 +158,10 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onResume(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onResume_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onResume((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onResume_should_call_listeners_only_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -204,16 +187,10 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onPause(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onPause_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onPause((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onPause_should_call_listeners_only_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -240,16 +217,10 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onStop(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onStop_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onStop((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onStop_should_call_listeners_only_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -277,16 +248,10 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onFinish(null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void onFinish_should_throw_if_origin_not_activity() throws Exception {
-        appLifecycleManager.onFinish((Class) IllegalArgumentException.class);
-    }
-
     @Test
     public void onFinish_should_call_listeners_only_once() throws Exception {
         final AtomicInteger counter = new AtomicInteger(0);
-        final Class<? extends Activity> targetOrigin = FirstActivity.class;
+        final Activity targetOrigin = new FirstActivity();
 
         appLifecycleManager.addListener(new DefaultAppLifecycleListener() {
             @Override
@@ -346,30 +311,33 @@ public class CrossActivityAppLifecycleManagerTest {
             }
         });
 
+        final FirstActivity firstActivity = new FirstActivity();
+        final SecondActivity secondActivity = new SecondActivity();
+
         // launch: start first activity
-        appLifecycleManager.onCreate(FirstActivity.class); // NOTIFY: create
-        appLifecycleManager.onStart(FirstActivity.class); // NOTIFY: start
-        appLifecycleManager.onResume(FirstActivity.class); // NOTIFY: resume
+        appLifecycleManager.onCreate(firstActivity); // NOTIFY: create
+        appLifecycleManager.onStart(firstActivity); // NOTIFY: start
+        appLifecycleManager.onResume(firstActivity); // NOTIFY: resume
 
         // start second activity
-        appLifecycleManager.onPause(FirstActivity.class); // NOTIFY: pause
-        appLifecycleManager.onCreate(SecondActivity.class);
-        appLifecycleManager.onStart(SecondActivity.class);
-        appLifecycleManager.onResume(SecondActivity.class); // NOTIFY: resume
-        appLifecycleManager.onStop(FirstActivity.class);
+        appLifecycleManager.onPause(firstActivity); // NOTIFY: pause
+        appLifecycleManager.onCreate(secondActivity);
+        appLifecycleManager.onStart(secondActivity);
+        appLifecycleManager.onResume(secondActivity); // NOTIFY: resume
+        appLifecycleManager.onStop(firstActivity);
 
         // go back to first activity
-        appLifecycleManager.onPause(SecondActivity.class); // NOTIFY: pause
-        appLifecycleManager.onCreate(FirstActivity.class);
-        appLifecycleManager.onStart(FirstActivity.class);
-        appLifecycleManager.onResume(FirstActivity.class); // NOTIFY: resume
-        appLifecycleManager.onStop(SecondActivity.class);
-        appLifecycleManager.onFinish(SecondActivity.class);
+        appLifecycleManager.onPause(secondActivity); // NOTIFY: pause
+        appLifecycleManager.onCreate(firstActivity);
+        appLifecycleManager.onStart(firstActivity);
+        appLifecycleManager.onResume(firstActivity); // NOTIFY: resume
+        appLifecycleManager.onStop(secondActivity);
+        appLifecycleManager.onFinish(secondActivity);
 
         // go back to home screen (exit)
-        appLifecycleManager.onPause(FirstActivity.class); // NOTIFY: pause
-        appLifecycleManager.onStop(FirstActivity.class); // NOTIFY: stop
-        appLifecycleManager.onFinish(FirstActivity.class); // NOTIFY: finish
+        appLifecycleManager.onPause(firstActivity); // NOTIFY: pause
+        appLifecycleManager.onStop(firstActivity); // NOTIFY: stop
+        appLifecycleManager.onFinish(firstActivity); // NOTIFY: finish
 
         final List<TestOriginEvent> expectedEvents = new LinkedList<>();
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.CREATE));
