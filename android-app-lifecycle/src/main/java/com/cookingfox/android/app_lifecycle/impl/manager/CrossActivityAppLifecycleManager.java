@@ -16,7 +16,8 @@ import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * App lifecycle manager implementation that supports tracking the Android lifecycle across
@@ -37,7 +38,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     /**
      * A set of app lifecycle event listeners.
      */
-    protected final List<AppLifecycleEventListener> listeners = new LinkedList<>();
+    protected final List<AppLifecycleEventListener> listeners = new LinkedList<AppLifecycleEventListener>();
 
     //----------------------------------------------------------------------------------------------
     // PUBLIC METHODS
@@ -45,7 +46,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
     @Override
     public AppLifecycleListenable addListener(AppLifecycleEventListener listener) {
-        if (listeners.contains(Objects.requireNonNull(listener))) {
+        if (listeners.contains(checkNotNull(listener, "Listener can not be null"))) {
             throw new IllegalStateException("Listener was already added: " + listener);
         }
 
@@ -56,7 +57,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
 
     @Override
     public AppLifecycleListenable removeListener(AppLifecycleEventListener listener) {
-        if (!listeners.contains(Objects.requireNonNull(listener))) {
+        if (!listeners.contains(checkNotNull(listener, "Listener can not be null"))) {
             throw new IllegalStateException("Listener not found: " + listener);
         }
 
@@ -222,7 +223,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
      * @return Whether this event is allowed to be triggered.
      */
     protected boolean isValid(Activity origin, AppLifecycleEvent... allowedLastEvents) {
-        Objects.requireNonNull(origin);
+        checkNotNull(origin, "Origin activity can not be null");
 
         return Arrays.asList(allowedLastEvents).contains(lastEvent);
     }
@@ -233,7 +234,7 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
      * @param notifier Utility for calling the correct lifecycle event methods.
      */
     protected void notifyListeners(ListenerNotifier notifier) {
-        final List<AppLifecycleEventListener> calledListeners = new LinkedList<>();
+        final List<AppLifecycleEventListener> calledListeners = new LinkedList<AppLifecycleEventListener>();
         final int numListeners = listeners.size();
 
         /**

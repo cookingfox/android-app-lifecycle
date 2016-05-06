@@ -5,7 +5,7 @@ import android.app.Application;
 import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import com.cookingfox.android.app_lifecycle.impl.manager.CrossActivityAppLifecycleManager;
 
-import java.util.Objects;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides initialization of app lifecycle manager and static access to manager.
@@ -22,7 +22,7 @@ public final class AppLifecycleProvider {
      * @throws NullPointerException when not initialized.
      */
     public static AppLifecycleManager getManager() {
-        return Objects.requireNonNull(manager, "Not yet initialized");
+        return checkNotNull(manager, "Not yet initialized");
     }
 
     /**
@@ -32,11 +32,11 @@ public final class AppLifecycleProvider {
      * @return App lifecycle manager instance.
      */
     public static AppLifecycleManager initialize(Application app) {
+        checkNotNull(app, "App should not be null");
+
         if (manager != null) {
             throw new IllegalStateException("Already initialized");
         }
-
-        Objects.requireNonNull(app, "App should not be null");
 
         return manager = new CrossActivityAppLifecycleManager();
     }

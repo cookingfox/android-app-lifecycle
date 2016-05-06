@@ -16,9 +16,9 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -86,7 +86,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
     @Test
     public void addListener_should_add_listeners_in_reverse_order() throws Exception {
-        final LinkedList<AppLifecycleEventListener> actualCalled = new LinkedList<>();
+        final LinkedList<AppLifecycleEventListener> actualCalled = new LinkedList<AppLifecycleEventListener>();
 
         class TestListener implements OnAppCreated {
             @Override
@@ -105,7 +105,7 @@ public class CrossActivityAppLifecycleManagerTest {
 
         appLifecycleManager.onCreate(new FirstActivity());
 
-        final LinkedList<AppLifecycleEventListener> expectedCalled = new LinkedList<>();
+        final LinkedList<AppLifecycleEventListener> expectedCalled = new LinkedList<AppLifecycleEventListener>();
         expectedCalled.add(third);
         expectedCalled.add(second);
         expectedCalled.add(first);
@@ -466,7 +466,7 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onStop(firstActivity); // NOTIFY: stop
         appLifecycleManager.onFinish(firstActivity); // NOTIFY: finish
 
-        final List<TestOriginEvent> expectedEvents = new LinkedList<>();
+        final List<TestOriginEvent> expectedEvents = new LinkedList<TestOriginEvent>();
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.CREATE));
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.START));
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
@@ -505,7 +505,7 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.onStop(firstActivity);
         appLifecycleManager.onFinish(firstActivity);
 
-        final List<TestOriginEvent> expectedEvents = new LinkedList<>();
+        final List<TestOriginEvent> expectedEvents = new LinkedList<TestOriginEvent>();
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.CREATE));
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.START));
         expectedEvents.add(new TestOriginEvent(FirstActivity.class, AppLifecycleEvent.RESUME));
@@ -525,7 +525,7 @@ public class CrossActivityAppLifecycleManagerTest {
     //----------------------------------------------------------------------------------------------
 
     private List<TestOriginEvent> createTestListener() {
-        final List<TestOriginEvent> actualEvents = new LinkedList<>();
+        final List<TestOriginEvent> actualEvents = new LinkedList<TestOriginEvent>();
 
         appLifecycleManager.addListener(new AppLifecycleListener() {
             @Override
@@ -571,8 +571,8 @@ public class CrossActivityAppLifecycleManagerTest {
         final AppLifecycleEvent event;
 
         public TestOriginEvent(Class<?> origin, AppLifecycleEvent event) {
-            this.origin = Objects.requireNonNull(origin);
-            this.event = Objects.requireNonNull(event);
+            this.origin = checkNotNull(origin);
+            this.event = checkNotNull(event);
         }
 
         @Override
