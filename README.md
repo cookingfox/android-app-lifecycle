@@ -11,6 +11,8 @@ This library makes working with the application lifecycle easier, by providing c
 (`onAppCreated`, `onAppStopped`, etc.) and by allowing activities to trigger lifecycle events with
 little extra effort.
 
+This library is compatible with Android from SDK 8 (Froyo).
+
 ## Installation
 
 This library uses [JitPack](https://jitpack.io/) for distribution.
