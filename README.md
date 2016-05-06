@@ -4,8 +4,8 @@ In an Android app, activities control the lifecycle. However, when attempting to
 Android components, and when the application spans multiple activities, the custom code is typically
 more interested in the APPLICATION lifecycle. Questions that arise can contain:
 
-_"How do I know in component X when the application is running in the background?"_
-_"How can I perform actions when the application is finishing?"_
+- _"How do I know in component X when the application is running in the background?"_
+- _"How can I perform actions when the application is finishing?"_
 
 This library makes working with the application lifecycle easier, by providing clear hooks
 (`onAppCreated`, `onAppStopped`, etc.) and by allowing activities to trigger lifecycle events with
@@ -55,6 +55,11 @@ public class App extends Application {
 }
 ```
 
+There are probably some operations you would like to perform every time the app is created and
+finished (destroyed), e.g. initializing and disposing your favorite dependency injection library.
+For an example of the recommended way to implement this, see
+[Persistent listener](#persistent-listener).
+
 Don't forget to add a reference to this class to your `AndroidManifest.xml`, for example:
 
 ```xml
@@ -66,7 +71,7 @@ Don't forget to add a reference to this class to your `AndroidManifest.xml`, for
 ### Activity integration
 
 The easiest way to integrate the library with your activities is by subclassing the provided
-`LifecycleActivity` classes. Here's an example for an `AppCompatActivity`:
+`AppLifecycleActivity` classes. Here's an example for an `AppCompatActivity`:
 
 ```java
 public class MainActivity extends LifecycleAppCompatActivity {
@@ -83,9 +88,9 @@ public class MainActivity extends LifecycleAppCompatActivity {
 As shown above, make sure you always call super when you override the `Activity` lifecycle methods.
 
 If you have a custom `Activity` implementation which cannot subclass the provided
-`LifecycleActivity` classes, then it is easy to integrate the library. Just call the corresponding
-methods on the app lifecycle manager. The only exception is the `onStop()` method, which must also
-contain the `onFinish()` call:
+`AppLifecycleActivity` classes, then it is easy to integrate the library. Just call the
+corresponding methods on the app lifecycle manager. The only exception is the `onStop()` method,
+which must also contain the `onFinish()` call:
 
 ```java
 @Override
@@ -100,12 +105,127 @@ protected void onStop() {
 }
 ```
 
-### Listening for app lifecycle events
-
-TODO: custom components (e.g. controllers) should depend on `AppLifecycleListenable`
-TODO: persistent listener (for Application)
-
 ### App lifecycle events
 
-TODO: explain application lifecycle events
-TODO: separate event interfaces (e.g. OnAppCreated)
+The following application lifecycle events are supported:
+
+- `onAppCreated`: When the first activity is created.
+- `onAppStarted`: When a new activity is started, or when the current activity is brought back from
+background to foreground.
+- `onAppResumed`: When the current activity is resumed by bringing it back to foreground, or after
+starting a new activity.
+- `onAppPaused`: When the current activity is paused by bringing it to background, or by starting a
+new activity.
+- `onAppStopped`: When the current activity is brought to background.
+- `onAppFinished`: When the last activity finished (exit application).
+
+### Listening for app lifecycle events
+
+If you want to listen for all app lifecycle events, it is most useful to implement
+`AppLifecycleListener`:
+
+```java
+AppLifecycleProvider.getManager().addListener(new AppLifecycleListener() {
+    @Override
+    public void onAppCreated(Class<?> origin) {
+    }
+
+    ...
+
+    @Override
+    public void onAppFinished(Class<?> origin) {
+    }
+});
+```
+
+In these cases `origin` is a reference to the activity that triggered the event. The wildcard type
+is used instead of typing to Activity, to make it easier to test these methods in a context that
+is not directly bound to Android (e.g. a controller or presenter).
+
+If you're only interested in a few app lifecycle events, it is useful to override
+`DefaultAppLifecycleListener`, which is a no-operation implementation of `AppLifecycleListener`.
+
+There are also listener interfaces available for every app lifecycle event, which can be used if you
+are only interested in a single event, for example:
+
+```java
+AppLifecycleProvider.getManager().addListener(new OnAppCreated() {
+    @Override
+    public void onAppCreated(Class<?> origin) {
+    }
+});
+```
+
+#### Depend on `AppLifecycleListenable`
+
+Only activities must call the event trigger methods (e.g. `AppLifecycleManager.onCreate(activity)`).
+To prevent non-activity components from calling these methods, and also to decouple your app
+lifecycle-interested code from Android, it is recommended to depend on the `AppLifecycleListenable`
+interface, which is extended by `AppLifecycleManager`. This interface allows you to add and remove
+event listeners.
+
+For example, when using the Chefling dependency injection container, it is smart to map the manager
+to the listenable interface:
+
+```java
+// create chefling container
+Container container = Chefling.createContainer();
+
+// map listenable interface to manager instance
+container.mapInstance(AppLifecycleListenable.class, AppLifecycleProvider.getManager());
+```
+
+And then use it somewhere else:
+
+```java
+// implement chefling lifecycle interface
+public class ExampleController implements LifeCycle {
+    final AppLifecycleListenable appLifecycle;
+
+    // dependency resolved by chefling
+    public ExampleController(AppLifecycleListenable appLifecycle) {
+        this.appLifecycle = appLifecycle;
+    }
+
+    // chefling lifecycle: initialize
+    public void initialize() {
+        appLifecycle.addListener(appLifecycleListener);
+    }
+
+    // chefling lifecycle: dispose
+    public void dispose() {
+        appLifecycle.removeListener(appLifecycleListener);
+    }
+
+    final AppLifecycleListener appLifecycleListener = new AppLifecycleListener() { ... }
+}
+```
+
+#### Persistent listener
+
+When you press the back button on an Android device from the "main" (root) activity, the
+`onAppFinished` app lifecycle event is triggered. This can be interpreted as the application having
+exited. However, there will still be an application process running, which means you can start it
+again from the background processes (e.g. by opening the "switch to application" menu from the
+device).
+
+The issue that occurs is that, after the `onAppFinished` app lifecycle event is triggered, all app
+lifecycle listeners are removed, as clean-up. However, we want one listener to persist, to listen
+for the `onAppCreated` app lifecycle event. This can be accomplished by adding a persistent
+listener, which will not be removed during the clean-up process.
+
+Typically you will not have more than one persistent listener in your application. It is recommended
+to add this listener after initialization in your `android.app.Application` implementation (see
+[Library initialization](#library-initialization)):
+
+```java
+AppLifecycleProvider.getManager().addListener(new PersistentAppLifecycleListener() {
+    @Override
+    public void onAppCreated(Class<?> origin) {
+    }
+
+    @Override
+    public void onAppFinished(Class<?> origin) {
+    }
+});
+```

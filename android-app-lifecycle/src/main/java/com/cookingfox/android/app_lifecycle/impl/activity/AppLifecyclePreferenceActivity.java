@@ -1,16 +1,16 @@
 package com.cookingfox.android.app_lifecycle.impl.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 
 import com.cookingfox.android.app_lifecycle.impl.AppLifecycleProvider;
 
 /**
- * Basic Activity implementation with app lifecycle support.
+ * Preference Activity implementation with app lifecycle support.
  */
-public class LifecycleActivity extends Activity {
+public class AppLifecyclePreferenceActivity extends PreferenceActivity {
 
     @CallSuper
     @Override

@@ -1,3 +1,1 @@
--   TODO: 2016-05-04 Write Robolectric tests
--   TODO: 2016-05-04 Write instrumentation tests (espresso?)
--   TODO: 2016-05-04 Write README
+-   TODO: 2016-05-06 Write Android instrumentation tests? Espresso?

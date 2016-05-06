@@ -5,9 +5,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-import com.cookingfox.android.app_lifecycle.impl.activity.LifecyclePreferenceActivity;
+import com.cookingfox.android.app_lifecycle.impl.activity.AppLifecyclePreferenceActivity;
 
-public class SettingsActivity extends LifecyclePreferenceActivity {
+public class SettingsActivity extends AppLifecyclePreferenceActivity {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
 

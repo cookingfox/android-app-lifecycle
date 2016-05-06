@@ -9,9 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.cookingfox.android.app_lifecycle.impl.activity.LifecycleAppCompatActivity;
+import com.cookingfox.android.app_lifecycle.impl.activity.AppLifecycleAppCompatActivity;
 
-public class MainActivity extends LifecycleAppCompatActivity {
+public class MainActivity extends AppLifecycleAppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 

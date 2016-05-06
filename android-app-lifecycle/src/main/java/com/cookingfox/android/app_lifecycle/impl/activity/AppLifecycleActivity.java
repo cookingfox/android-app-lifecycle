@@ -1,16 +1,16 @@
 package com.cookingfox.android.app_lifecycle.impl.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.cookingfox.android.app_lifecycle.impl.AppLifecycleProvider;
 
 /**
- * App Compat Activity implementation with app lifecycle support.
+ * Basic Activity implementation with app lifecycle support.
  */
-public class LifecycleAppCompatActivity extends AppCompatActivity {
+public class AppLifecycleActivity extends Activity {
 
     @CallSuper
     @Override
