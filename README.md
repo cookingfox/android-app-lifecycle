@@ -166,8 +166,8 @@ lifecycle-interested code from Android, it is recommended to depend on the `AppL
 interface, which is extended by `AppLifecycleManager`. This interface allows you to add and remove
 event listeners.
 
-For example, when using the Chefling dependency injection container, it is smart to map the manager
-to the listenable interface:
+For example, when using the [Chefling](https://github.com/cookingfox/chefling-di-java) dependency 
+injection container, it is smart to map the manager to the listenable interface:
 
 ```java
 // create chefling container
