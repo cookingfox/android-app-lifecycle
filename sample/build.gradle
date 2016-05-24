@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId 'com.cookingfox.android.app_lifecycle.sample'
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 11 // necessary for fragment support in settings activity
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
