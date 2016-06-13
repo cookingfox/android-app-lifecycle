@@ -1,3 +1,7 @@
+# v0.1.3 (2016-06-13)
+
+- Sets the correct version number in the root gradle file.
+
 # v0.1.2 (2016-06-13)
 
 - Replaces imported Guava Preconditions class with library.
