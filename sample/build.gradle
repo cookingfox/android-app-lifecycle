@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile project(':android-app-lifecycle')
+    compile project(':app-lifecycle')
     compile deps.android_appcompat
     compile deps.android_design
 }

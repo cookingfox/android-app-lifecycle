@@ -1,1 +1,1 @@
-include ':android-app-lifecycle', ':sample'
+include ':app-lifecycle', ':sample'
