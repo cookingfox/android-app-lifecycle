@@ -31,7 +31,7 @@ Add the dependency to your app's `build.gradle` file:
 
 ```groovy
 dependencies {
-    compile 'org.bitbucket.cookingfox:android-app-lifecycle:0.1.1'
+    compile 'org.bitbucket.cookingfox:android-app-lifecycle:0.1.2'
 }
 ```
 

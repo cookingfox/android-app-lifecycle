@@ -1,3 +1,8 @@
+# v0.1.2 (2016-06-13)
+
+- Replaces imported Guava Preconditions class with library.
+- Renames library module to "app-lifecycle".
+
 # v0.1.1 (2016-05-06)
 
 - Sets `minSdkVersion` to SDK 8 and compiler version to JDK 1.6.
