@@ -27,6 +27,7 @@ android {
 
 dependencies {
     compile deps.android_appcompat
+    compile deps.guava_preconditions
     testCompile deps.junit
 }
 
