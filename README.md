@@ -13,11 +13,12 @@ little extra effort.
 
 This library is compatible with Android from SDK 8 (Froyo).
 
-## Installation
-
+[![Build Status](https://travis-ci.org/cookingfox/android-app-lifecycle.svg?branch=master)](https://travis-ci.org/cookingfox/android-app-lifecycle)
 [![](https://jitpack.io/v/cookingfox/android-app-lifecycle.svg)](https://jitpack.io/#cookingfox/android-app-lifecycle)
 
-This library uses [JitPack](https://jitpack.io/) for distribution.
+## Installation
+
+This library uses [JitPack](https://jitpack.io/#cookingfox/android-app-lifecycle) for distribution.
 
 Add the JitPack repository to your Android project's ROOT `build.gradle` file:
 
