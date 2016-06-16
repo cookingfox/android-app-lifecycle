@@ -1,5 +1,9 @@
 # Android App Lifecycle: Change Log
 
+## v0.1.5 (2016-06-16)
+
+- Updates the Android support dependencies.
+
 ## v0.1.4 (2016-06-14)
 
 - Removes maven gradle plugin related code, since it is not necessary when using JitPack.

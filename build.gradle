@@ -26,13 +26,13 @@ ext {
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
 
-    versionCode = 6
-    versionName = '0.1.4'
+    versionCode = 7
+    versionName = '0.1.5'
 }
 
 ext.deps = [
-        android_appcompat  : 'com.android.support:appcompat-v7:23.3.0',
-        android_design     : 'com.android.support:design:23.3.0',
+        android_appcompat  : 'com.android.support:appcompat-v7:23.4.0',
+        android_design     : 'com.android.support:design:23.4.0',
         guava_preconditions: 'com.cookingfox:guava-preconditions:0.1.4',
         junit              : 'junit:junit:4.12'
 ]
