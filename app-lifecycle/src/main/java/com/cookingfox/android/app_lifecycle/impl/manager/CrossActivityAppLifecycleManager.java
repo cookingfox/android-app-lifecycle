@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 
 /**
  * App lifecycle manager implementation that supports tracking the Android lifecycle across

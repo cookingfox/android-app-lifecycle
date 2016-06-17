@@ -5,7 +5,7 @@ import android.app.Application;
 import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
 import com.cookingfox.android.app_lifecycle.impl.manager.CrossActivityAppLifecycleManager;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 
 /**
  * Provides initialization of app lifecycle manager and static access to manager.

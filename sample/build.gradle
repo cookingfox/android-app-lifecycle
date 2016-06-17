@@ -1,19 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
 
     defaultConfig {
         applicationId 'com.cookingfox.android.app_lifecycle.sample'
         minSdkVersion 11 // necessary for fragment support in settings activity
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
     }
     compileOptions {
-        sourceCompatibility rootProject.ext.sourceCompatibility
-        targetCompatibility rootProject.ext.targetCompatibility
+        sourceCompatibility config.sourceCompatibility
+        targetCompatibility config.targetCompatibility
     }
     buildTypes {
         release {

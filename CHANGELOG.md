@@ -1,5 +1,9 @@
 # Android App Lifecycle: Change Log
 
+## v0.1.6 (2016-06-17)
+
+- Updates Guava Preconditions library.
+
 ## v0.1.5 (2016-06-16)
 
 - Updates the Android support dependencies.
