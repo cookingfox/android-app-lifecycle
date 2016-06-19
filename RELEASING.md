@@ -1,8 +1,12 @@
-Take the following steps when releasing a new version of the library:
+Take the following steps when releasing a new version of the library to JitPack:
 
-1. Increase the `versionCode` and `versionName` in the [root `build.gradle`](../build.gradle), 
+1. Run all unit tests.
+2. Run the sample, if available.
+3. Increase the `versionCode` and `versionName` in the [root `build.gradle`](../build.gradle), 
 following the [Semantic Versioning](http://semver.org/) standard.
-2. Add the changes to the [CHANGELOG](../CHANGELOG.md).
-3. Update the version number in the [README](../README.md).
-4. Push the above changes.
-5. Create and push a new Git release tag for the new version.
+4. Add the changes to the [CHANGELOG](../CHANGELOG.md).
+5. Update the version number in the [README](../README.md).
+6. Push the above changes.
+7. Create and push a new Git release tag for the new version.
+
+Now your apps / other libraries can include this dependency using the new release tag.
