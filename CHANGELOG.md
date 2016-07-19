@@ -1,5 +1,9 @@
 # Android App Lifecycle: Change Log
 
+## v0.1.9 (2016-07-19)
+
+- Adds support for `Application.ActivityLifecycleCallbacks` from SDK 14 (Ice Cream Sandwich).
+
 ## v0.1.8 (2016-07-19)
 
 - Reverts the Android support dependencies and build tools version to keep JDK 6 support.
