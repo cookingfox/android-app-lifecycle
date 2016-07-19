@@ -1,6 +1,10 @@
 # Android App Lifecycle: Change Log
 
-## v0.1.7 (2016-06-17)
+## v0.1.8 (2016-07-19)
+
+- Reverts the Android support dependencies and build tools version to keep JDK 6 support.
+
+## v0.1.7 (2016-07-19)
 
 - Adds `dispose()` functionality to manager and provider.
 - Updates the Android support dependencies and build tools version.
