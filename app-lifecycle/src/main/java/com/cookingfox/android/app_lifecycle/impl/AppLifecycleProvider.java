@@ -1,8 +1,10 @@
 package com.cookingfox.android.app_lifecycle.impl;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.cookingfox.android.app_lifecycle.api.manager.AppLifecycleManager;
+import com.cookingfox.android.app_lifecycle.impl.activity.AppLifecycleActivityCallbacks;
 import com.cookingfox.android.app_lifecycle.impl.manager.CrossActivityAppLifecycleManager;
 
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
@@ -11,6 +13,11 @@ import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
  * Provides initialization of app lifecycle manager and static access to manager.
  */
 public final class AppLifecycleProvider {
+
+    /**
+     * Wraps {@link Application.ActivityLifecycleCallbacks}, if supported.
+     */
+    protected static AppLifecycleActivityCallbacks activityLifecycleCallbacks;
 
     /**
      * Static instance of lifecycle manager.
@@ -25,6 +32,12 @@ public final class AppLifecycleProvider {
      */
     public static void dispose() {
         getManager().dispose();
+
+        // SDK >= 14? use activity lifecycle callbacks
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            activityLifecycleCallbacks.dispose();
+            activityLifecycleCallbacks = null;
+        }
 
         manager = null;
     }
@@ -56,7 +69,15 @@ public final class AppLifecycleProvider {
             throw new IllegalStateException("App lifecycle manager is already initialized");
         }
 
-        return manager = new CrossActivityAppLifecycleManager();
+        manager = new CrossActivityAppLifecycleManager();
+
+        // SDK >= 14? use activity lifecycle callbacks
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            activityLifecycleCallbacks = new AppLifecycleActivityCallbacks(app, manager);
+            activityLifecycleCallbacks.initialize();
+        }
+
+        return manager;
     }
 
 }
