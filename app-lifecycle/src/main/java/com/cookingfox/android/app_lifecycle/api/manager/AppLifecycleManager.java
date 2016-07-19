@@ -10,6 +10,11 @@ import com.cookingfox.android.app_lifecycle.api.listener.AppLifecycleListenable;
 public interface AppLifecycleManager extends AppLifecycleListenable {
 
     /**
+     * Clear all listeners and app references.
+     */
+    void dispose();
+
+    /**
      * Trigger an activity create event.
      *
      * @param origin The activity that triggers the event.

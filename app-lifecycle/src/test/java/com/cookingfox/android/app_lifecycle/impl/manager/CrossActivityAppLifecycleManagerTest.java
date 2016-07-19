@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -191,6 +192,36 @@ public class CrossActivityAppLifecycleManagerTest {
         appLifecycleManager.addListener(lastListener);
 
         appLifecycleManager.onCreate(new FirstActivity());
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // TESTS: dispose
+    //----------------------------------------------------------------------------------------------
+
+    @Test
+    public void dispose_should_remove_listeners() throws Exception {
+        assertTrue(appLifecycleManager.listeners.isEmpty());
+
+        appLifecycleManager.addListener(new DefaultAppLifecycleListener());
+
+        assertFalse(appLifecycleManager.listeners.isEmpty());
+
+        appLifecycleManager.dispose();
+
+        assertTrue(appLifecycleManager.listeners.isEmpty());
+    }
+
+    @Test
+    public void dispose_should_reset_state() throws Exception {
+        appLifecycleManager.onCreate(new FirstActivity());
+
+        assertNotNull(appLifecycleManager.currentOrigin);
+        assertNotNull(appLifecycleManager.lastEvent);
+
+        appLifecycleManager.dispose();
+
+        assertNull(appLifecycleManager.currentOrigin);
+        assertNull(appLifecycleManager.lastEvent);
     }
 
     //----------------------------------------------------------------------------------------------

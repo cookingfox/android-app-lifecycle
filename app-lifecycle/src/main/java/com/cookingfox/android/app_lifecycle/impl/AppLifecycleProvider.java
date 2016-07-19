@@ -18,11 +18,26 @@ public final class AppLifecycleProvider {
     protected static AppLifecycleManager manager;
 
     /**
+     * Disposes the app lifecycle manager.
+     *
+     * @throws NullPointerException when not initialized.
+     * @see AppLifecycleManager#dispose()
+     */
+    public static void dispose() {
+        getManager().dispose();
+
+        manager = null;
+    }
+
+    /**
+     * Returns the app lifecycle manager.
+     *
      * @return App lifecycle manager instance.
      * @throws NullPointerException when not initialized.
      */
     public static AppLifecycleManager getManager() {
-        return checkNotNull(manager, "Not yet initialized");
+        return checkNotNull(manager, "Can not get app lifecycle manager: not yet initialized - " +
+                "call `AppLifecycleProvider.initialize()` first");
     }
 
     /**
@@ -30,12 +45,15 @@ public final class AppLifecycleProvider {
      *
      * @param app An instance of the Android application, to ensure the correct starting point.
      * @return App lifecycle manager instance.
+     * @throws NullPointerException  when the Application instance is null.
+     * @throws IllegalStateException when the manager is already initialized.
      */
     public static AppLifecycleManager initialize(Application app) {
-        checkNotNull(app, "App should not be null");
+        checkNotNull(app, "Can not initialize app lifecycle manager: provided `Application` " +
+                "instance is null");
 
         if (manager != null) {
-            throw new IllegalStateException("Already initialized");
+            throw new IllegalStateException("App lifecycle manager is already initialized");
         }
 
         return manager = new CrossActivityAppLifecycleManager();

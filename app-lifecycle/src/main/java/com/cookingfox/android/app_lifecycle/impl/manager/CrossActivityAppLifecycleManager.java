@@ -70,6 +70,14 @@ public class CrossActivityAppLifecycleManager implements AppLifecycleManager {
     }
 
     @Override
+    public void dispose() {
+        // clear listeners and reset state
+        listeners.clear();
+        currentOrigin = null;
+        lastEvent = null;
+    }
+
+    @Override
     public void onCreate(Activity origin) {
         // initially the last event is null
         if (!isValid(origin, new AppLifecycleEvent[]{null})) {
