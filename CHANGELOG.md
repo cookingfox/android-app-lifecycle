@@ -1,5 +1,10 @@
 # Android App Lifecycle: Change Log
 
+## v0.1.7 (2016-06-17)
+
+- Adds `dispose()` functionality to manager and provider.
+- Updates the Android support dependencies and build tools version.
+
 ## v0.1.6 (2016-06-17)
 
 - Updates Guava Preconditions library.
