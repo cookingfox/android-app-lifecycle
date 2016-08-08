@@ -8,5 +8,6 @@ following the [Semantic Versioning](http://semver.org/) standard.
 5. Update the version number in the [README](../README.md).
 6. Push the above changes.
 7. Create and push a new Git release tag for the new version.
+8. Add the release notes on GitHub (usually the same as CHANGELOG description).
 
 Now your apps / other libraries can include this dependency using the new release tag.

@@ -1,5 +1,9 @@
 # Android App Lifecycle: Change Log
 
+## v0.1.10 (2016-08-08)
+
+- Adds support for distribution of sources and javadoc.
+
 ## v0.1.9 (2016-07-19)
 
 - Adds support for `Application.ActivityLifecycleCallbacks` from SDK 14 (Ice Cream Sandwich).

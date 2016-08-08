@@ -34,7 +34,7 @@ Add the dependency to your app's `build.gradle` file:
 
 ```groovy
 dependencies {
-    compile 'com.github.cookingfox:android-app-lifecycle:0.1.9'
+    compile 'com.github.cookingfox:android-app-lifecycle:0.1.10'
 }
 ```
 
@@ -43,6 +43,8 @@ dependencies {
 There's a sample application showing the basic usage of the library in the `/sample` directory.
 
 ## Usage
+
+[Javadoc](https://jitpack.io/com/github/cookingfox/android-app-lifecycle/0.1.10/javadoc/)
 
 ### Library initialization
 
@@ -75,8 +77,15 @@ Don't forget to add a reference to this class to your `AndroidManifest.xml`, for
 
 ### Activity integration
 
-The easiest way to integrate the library with your activities is by subclassing the provided
-`AppLifecycleActivity` classes. Here's an example for an `AppCompatActivity`:
+#### IMPORTANT:
+
+If you're using Android SDK >= version 14 (Ice Cream Sandwich), you're done. SDK 14 introduced
+[`android.app.Application.ActivityLifecycleCallbacks`](https://developer.android.com/reference/android/app/Application.ActivityLifecycleCallbacks.html),
+which is implemented by this library.
+
+However, if you want to target lower SDKs, you'll need to integrate the library in your activities
+by subclassing the provided `AppLifecycleActivity` classes. Here's an example for an
+`AppCompatActivity`:
 
 ```java
 public class MainActivity extends LifecycleAppCompatActivity {

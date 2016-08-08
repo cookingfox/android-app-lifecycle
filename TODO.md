@@ -1,2 +1,0 @@
--   TODO: 2016-07-19 Add explanation of `Application.ActivityLifecycleCallbacks` to README.
--   TODO: 2016-05-06 Write Android instrumentation tests? Espresso?
