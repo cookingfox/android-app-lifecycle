@@ -28,6 +28,9 @@ dependencies {
     compile deps.android_appcompat
     compile deps.guava_preconditions
 
+    // prevents errors during CI build
+    provided deps.android_support_v4
+
     testCompile deps.junit
     testCompile deps.mockito
 }
