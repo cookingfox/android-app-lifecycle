@@ -32,5 +32,5 @@ dependencies {
     testCompile deps.mockito
 
     // prevents errors during CI build
-    androidTestCompile deps.espresso_contrib
+    testCompile fileTree(dir: "${rootDir}/app-lifecycle/build/intermediates/exploded-aar/com.android.support/support-v4/", include: "**/*.jar")
 }
