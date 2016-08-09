@@ -31,8 +31,8 @@ ext.config = [
         buildToolsVersion  : '23.0.3',
         sourceCompatibility: JavaVersion.VERSION_1_6,
         targetCompatibility: JavaVersion.VERSION_1_6,
-        versionCode        : 12,
-        versionName        : '0.1.10',
+        versionCode        : 13,
+        versionName        : '0.1.11',
         groupName          : 'com.github.cookingfox',
 ]
 
