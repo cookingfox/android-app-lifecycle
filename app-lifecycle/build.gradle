@@ -30,4 +30,7 @@ dependencies {
 
     testCompile deps.junit
     testCompile deps.mockito
+
+    // prevents errors during CI build
+    androidTestCompile deps.espresso_contrib
 }
