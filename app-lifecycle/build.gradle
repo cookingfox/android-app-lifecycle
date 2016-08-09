@@ -2,6 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'io.freefair.android-maven-jars'
 
+// maven settings
+group = config.groupName
+version = config.versionName
+
 android {
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
@@ -27,9 +31,6 @@ android {
 dependencies {
     compile deps.android_appcompat
     compile deps.guava_preconditions
-
-    // prevents errors during CI build
-    provided deps.android_support_v4
 
     testCompile deps.junit
     testCompile deps.mockito

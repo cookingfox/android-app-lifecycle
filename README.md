@@ -44,8 +44,6 @@ There's a sample application showing the basic usage of the library in the `/sam
 
 ## Usage
 
-[Javadoc](https://jitpack.io/com/github/cookingfox/android-app-lifecycle/0.1.10/javadoc/)
-
 ### Library initialization
 
 The recommended way to start using the library is to subclass the `android.app.Application` class

@@ -33,12 +33,12 @@ ext.config = [
         targetCompatibility: JavaVersion.VERSION_1_6,
         versionCode        : 12,
         versionName        : '0.1.10',
+        groupName          : 'com.github.cookingfox',
 ]
 
 ext.deps = [
         android_appcompat  : 'com.android.support:appcompat-v7:23.4.0',
         android_design     : 'com.android.support:design:23.4.0',
-        android_support_v4 : 'com.android.support:support-v4:23.4.0',
         guava_preconditions: 'com.cookingfox:guava-preconditions:0.1.5',
         junit              : 'junit:junit:4.12',
         mockito            : 'org.mockito:mockito-core:2.0.99-beta'
