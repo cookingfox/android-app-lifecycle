@@ -1,5 +1,10 @@
 # Android App Lifecycle: Change Log
 
+## v0.2.0 (2016-12-08)
+
+- Updates Gradle, plugins, build tools and dependencies.
+- Increases minimum Android support to SDK 9 (Gingerbread).
+
 ## v0.1.11 (2016-08-09)
 
 - Fixes support for distribution of sources and javadoc.

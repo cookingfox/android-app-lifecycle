@@ -11,7 +11,7 @@ This library makes working with the application lifecycle easier, by providing c
 (`onAppCreated`, `onAppStopped`, etc.) and by allowing activities to trigger lifecycle events with
 little extra effort.
 
-This library is compatible with Android from SDK 8 (Froyo).
+This library is compatible with Android from SDK 9 (Gingerbread).
 
 [![Build Status](https://travis-ci.org/cookingfox/android-app-lifecycle.svg?branch=master)](https://travis-ci.org/cookingfox/android-app-lifecycle)
 [![](https://jitpack.io/v/cookingfox/android-app-lifecycle.svg)](https://jitpack.io/#cookingfox/android-app-lifecycle)
@@ -34,7 +34,7 @@ Add the dependency to your app's `build.gradle` file:
 
 ```groovy
 dependencies {
-    compile 'com.github.cookingfox:android-app-lifecycle:0.1.11'
+    compile 'com.github.cookingfox:android-app-lifecycle:0.2.0'
 }
 ```
 
