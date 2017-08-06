@@ -54,6 +54,15 @@ public final class AppLifecycleProvider {
     }
 
     /**
+     * Set a custom lifecycle manager instance.
+     *
+     * @param manager The custom lifecycle manager instance.
+     */
+    public static void setManager(AppLifecycleManager manager) {
+        AppLifecycleProvider.manager = checkNotNull(manager, "Manager cannot be null");
+    }
+
+    /**
      * Initializes the app lifecycle manager.
      *
      * @param app An instance of the Android application, to ensure the correct starting point.
@@ -65,11 +74,9 @@ public final class AppLifecycleProvider {
         checkNotNull(app, "Can not initialize app lifecycle manager: provided `Application` " +
                 "instance is null");
 
-        if (manager != null) {
-            throw new IllegalStateException("App lifecycle manager is already initialized");
+        if (manager == null) {
+            manager = new CrossActivityAppLifecycleManager();
         }
-
-        manager = new CrossActivityAppLifecycleManager();
 
         // SDK >= 14? use activity lifecycle callbacks
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {

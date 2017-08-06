@@ -91,14 +91,6 @@ public class AppLifecycleProviderTest {
         AppLifecycleProvider.initialize(null);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void initialize_should_throw_if_already_initialized() throws Exception {
-        FirstApp app = new FirstApp();
-
-        AppLifecycleProvider.initialize(app);
-        AppLifecycleProvider.initialize(app);
-    }
-
     @Test
     public void initialize_should_return_manager() throws Exception {
         AppLifecycleManager manager = AppLifecycleProvider.initialize(new FirstApp());
